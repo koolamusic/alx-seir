@@ -5,10 +5,10 @@
     "fmt": "prettier --write '**/*.{js,ts}'"
   },
   "prettier": {
-		"singleQuote": true,
-		"trailingComma": "es5",
-		"arrowParens": "always"
-	},
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "arrowParens": "always"
+  },
   "devDependencies": {
     "eslint": "^7.11.0",
     "jest": "26.5.2",

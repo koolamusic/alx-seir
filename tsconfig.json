@@ -17,7 +17,7 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@seri/server": ["apps/server"]
+            "@server": ["api/src/*"]
         }
     },
     "exclude": ["node_modules", "dist", "tmp"]

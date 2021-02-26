@@ -1,7 +1,10 @@
+import { setLogLevel, LogLevels } from '@typegoose/typegoose';
 import logger from './core/logger';
 import secrets from './core/secrets';
 import server from './server';
 import connectMongoose from './core/database'
+
+setLogLevel(LogLevels.TRACE);
 
 
 /* Connect Database */

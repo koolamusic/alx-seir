@@ -5,8 +5,8 @@
  * 3. Add Deserializer for Sessions and protected routes
  */
 import { Request, Response, NextFunction } from 'express'
-const LocalStrategy = require('passport-local').Strategy
 import HttpError from './errors'
+const LocalStrategy = require('passport-local').Strategy
 
 
 const users = [

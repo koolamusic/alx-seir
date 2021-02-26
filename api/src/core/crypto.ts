@@ -1,15 +1,10 @@
-const bcrypt = require('bcrypt')
+import bcrypt from 'bcrypt'
 
-const encryptPassword = (password) => {
-  const salt = bcrypt.genSaltSync()
+export const encryptPassword = (password: string) => {
+  const salt = bcrypt.genSaltSync(8)
   return bcrypt.hashSync(password, salt)
 }
 
-const comparePassword = (password, encodedPassword) => {
+export const validPassword = (password: string, encodedPassword: string) => {
   return bcrypt.compareSync(password, encodedPassword)
-}
-
-module.exports = {
-  encryptPassword,
-  comparePassword
 }
