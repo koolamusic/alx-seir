@@ -1,9 +1,14 @@
 import logger from './core/logger';
 import secrets from './core/secrets';
 import server from './server';
+import connectMongoose from './core/database'
+
+
+/* Connect Database */
+connectMongoose(secrets.MONGO_URI_DEV as string)
+
 
 async function main() {
-  /* Instantiate the Redis Queue Here */
 
   /* Start & Listen on HTTP Server */
   await server.listen({ port: secrets.PORT, host: secrets.HOST });
