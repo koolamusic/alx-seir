@@ -1,12 +1,13 @@
 import cors from 'cors';
 import MongoStore from 'connect-mongo'
-import express, { Request } from 'express';
+import express, { NextFunction, Response, Request } from 'express';
 import session from 'express-session';
 import { nanoid } from 'nanoid'
 import passport from 'passport'
 import messengerRoute from './controllers/messenger/routes';
 import secrets from './core/secrets';
 import * as strategy from './core/auth'
+import HttpError from './core/errors';
 
 const server = express();
 
@@ -58,13 +59,24 @@ server.use(express.json());
 
 /* For the UI and API Routes */
 server.use('/messenger',
-  passport.authenticate('local', { failureRedirect: '/_healthcheck' }), // Temp test for passport
+  // passport.authenticate('local', { failureRedirect: '/_healthcheck' }), // Temp test for passport
   messengerRoute);
 
 server.use('/_healthcheck', (_req: Request, res) => {
   console.log(_req.session, _req.isAuthenticated(), _req.user)
   res.status(200).json({ uptime: process.uptime() });
 });
+
+/* Global Error Handler to throw Errors into API Response */
+server.use("*", (error: HttpError, _req: Request, res: Response, _next: NextFunction) => {
+  res.status(error.status).json({
+    status: error.status,
+    name: error.name,
+    reason: error.message,
+    details: error.stack
+  });
+});
+
 
 // server.login(user, function(err) {
 //   if (err) { return next(err); }
