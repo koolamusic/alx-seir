@@ -6,75 +6,45 @@
  */
 import { Request, Response, NextFunction } from 'express'
 import { Strategy, VerifyFunction, IStrategyOptions } from 'passport-local'
-import { getCurrentUser } from './../application/auth';
+import { IUser } from '../shared/user.interface';
+// import { getCurrentUser } from './../application/auth';
 import HttpError from './errors'
 
 
-
+/* Passport local strategy options */
 const strategyOptions: IStrategyOptions = {
     usernameField: 'email',
-
+    passwordField: 'password',
+    session: true
 }
 
+const mockPayload = {
+    name: "Amaloar",
+    email: 'rubik@mail.com',
+    username: 'rubik@mail.com',
+    password: "123456"
+}
 
-const verifyUser: VerifyFunction = async (username, password, done) => {
-    if (username && password) {
-        const user = await getCurrentUser({ email: username })
-        if (!user) {
-            throw new HttpError(401);
-        }
-        return done(null, user)
+const verifyUser: VerifyFunction = async (_username, _password, done) => {
+    console.log("GOT FIRED")
+    return done(null, mockPayload)
 
-    }
-    throw new HttpError(401);
+    // try {
+    //     if (username && password) {
+    //         const user = await getCurrentUser({ email: username })
+    //         if (!user) {
+    //             throw new HttpError(401);
+    //         }
+    //         return done(null, user)
+    //     }
+    // } catch (error) {
+    //     done(error)
+    //     throw new HttpError(401);
+    // }
 
 }
 
 export const localStrategy = new Strategy(strategyOptions, verifyUser)
-
-
-
-// export default function localStrategy() {
-//     return new Strategy(strategyOptions, verifyUser)
-// }
-
-
-
-
-// { usernameField: 'email' },
-// verifyUser
-// (email: string, password: string, done: (arg0: null, arg1: { id: string; email: string; password: string; }) => any) => {
-//     console.log('Inside local strategy callback')
-//     // here is where you make a call to the database
-//     // to find the user based on their username or email address
-//     // for now, we'll just pretend we found that it was users[0]
-//     const user = users[0]
-//     if (email === user.email && password === user.password) {
-//         console.log('Local strategy returned true')
-//         return done(null, user)
-//     }
-// }
-// );
-
-// tell passport how to serialize the user
-// passport.serializeUser((user: { id: any; }, done: (arg0: null, arg1: any) => void) => {
-//     console.log('Inside serializeUser callback. User id is save to the session file store here')
-//     done(null, user.id);
-// });
-
-// passport.serializeUser(function(user, done) {
-//     done(null, user.id);
-//   });
-
-//   passport.deserializeUser(function(id, done) {
-//     User.findById(id, function(err, user) {
-//       done(err, user);
-//     });
-//   });
-
-
-
-
 
 
 /* Middleware to check if user is authenticated in routes */
@@ -82,10 +52,50 @@ export const isAuthenticated = (req: Request, _res: Response, next: NextFunction
     try {
         console.log(req.isAuthenticated(), req.isUnauthenticated())
         if (!req.isAuthenticated()) {
-            throw new HttpError(401)
+            throw new HttpError(401, "You are not authenticated")
         }
         next()
     } catch (error) {
         next(error)
     }
 }
+
+
+/* Tell passport how to serialize the user */
+export const userSerializer = async (user: Express.User, done: (err: null, tid: Express.User) => void) => {
+    console.log('Inside serializeUser callback. User id is save to the session file store here', user)
+    done(null, user);
+}
+
+export const userDeserializer = async (user: IUser, done: (err: any, tid: any) => void) => {
+    try {
+        console.log(user)
+        if (user && user.email) {
+            // const profile = await getCurrentUser({ email: user.email })
+            let profile = mockPayload
+
+            console.log('the profile we got from deserialization', profile)
+            done(null, profile)
+        }
+
+    } catch (error) {
+        done(error, false)
+
+    }
+
+}
+
+
+//   authservice.getUser***
+//     User.findById(id, function(err, user) {
+//       done(err, user);
+//     });
+//   });
+
+// passport.serializeUser((user: { id: any; }, done: (arg0: null, arg1: any) => void) => {
+//     console.log('Inside serializeUser callback. User id is save to the session file store here')
+//     done(null, user.id);
+// });
+
+
+

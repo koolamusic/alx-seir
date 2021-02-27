@@ -1,4 +1,4 @@
-import * as crypto from './../../core/crypto';
+import * as crypto from '../../core/crypto.utils';
 import { getModelForClass, prop, DocumentType, pre } from '@typegoose/typegoose'
 
 
@@ -12,14 +12,11 @@ import { getModelForClass, prop, DocumentType, pre } from '@typegoose/typegoose'
 /* Declare user class */
 class User {
 
-    @prop({ required: true, unique: true })
-    public username!: string;
+    @prop({ required: true, unique: true, alias: 'username' })
+    public email!: string;
 
     @prop({ required: true })
     public password!: string;
-
-    @prop()
-    public email?: string;
 
     @prop()
     public name?: string;

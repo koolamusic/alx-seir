@@ -37,18 +37,20 @@ const sessionMiddleware = session({
   name: "__jedi.sid__",
   cookie: {
     httpOnly: true,
-    signed: true,
+    signed: false,
     maxAge: 60000,
     // domain: '*.alxseri.xyz, localhost'
   },
   secret: 'w8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
   resave: false,
   saveUninitialized: false,
-  // rolling: true,
+  rolling: true,
 })
 
 /* Sessions and authentication Middleware */
 passport.use(strategy.localStrategy)
+passport.serializeUser(strategy.userSerializer)
+passport.deserializeUser(strategy.userDeserializer)
 server.use(sessionMiddleware)
 server.use(passport.initialize())
 server.use(passport.session())
@@ -73,15 +75,68 @@ server.use("*", (error: HttpError, _req: Request, res: Response, _next: NextFunc
     status: error.status,
     name: error.name,
     reason: error.message,
-    details: error.stack
+    // details: error.stack
   });
 });
 
+const userInfo = {
+  name: "Amaloar",
+  email: 'rubik@mail.com',
+  username: 'rubik@mail.com',
+  password: "123456"
+}
 
-// server.login(user, function(err) {
-//   if (err) { return next(err); }
-//   return res.redirect('/users/' + req.user.username);
-// });
+server.post('/login', (req, res, next) => {
+  req.body = userInfo;
+
+  passport.authenticate('local',
+    (err, user, info) => {
+      console.log(user, info)
+      if (err) {
+        throw new Error(err);
+      }
+
+      if (!user) {
+        return res.redirect('/login?info=' + info);
+      }
+
+      req.login(user, function (err) {
+        if (err) {
+          return next(err);
+        }
+
+        return res.redirect('/_healthcheck');
+      });
+
+    })(req, res, next);
+});
+
+
+
+// server.post('/login', (req, res, next) => {
+//   try {
+//     passport.authenticate('local', (err, user, info) => {
+//       console.log("This is payload of user", user)
+//       const payload = {
+//         name: "Amaloar",
+//         email: 'rubik@mail.com',
+//         username: 'rubik@mail.com',
+//         password: "123456"
+//       }
+//       if (info) { return res.json(info.message) }
+//       if (err) { return next(err); }
+//       if (!payload) { return res.redirect('/login'); }
+
+//       req.login(payload, (err) => {
+//         if (err) { throw new Error(err); }
+//         return res.redirect('/_healthcheck');
+//       })
+//     })(req, res, next);
+
+//   } catch (error) {
+//     throw new Error(error)
+//   }
+// })
 
 /* Logout Route */
 server.use('/logout', (req, res) => {
