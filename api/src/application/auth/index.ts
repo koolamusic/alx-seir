@@ -30,7 +30,7 @@ export default class AuthApplication implements IAuthApplication<UserCollection>
             return userDocument
 
         } catch (error) {
-            logger.error(error)
+            logger.error(`[AuthApplication:validateUser]: ${error}`);
             throw new HttpError(500, error)
 
         }
@@ -45,7 +45,7 @@ export default class AuthApplication implements IAuthApplication<UserCollection>
             return result
 
         } catch (error) {
-            logger.error(error);
+            logger.error(`[AuthApplication:getCurrentUser]: ${error}`);
             throw new HttpError(500, error);
         }
     }
@@ -58,8 +58,8 @@ export default class AuthApplication implements IAuthApplication<UserCollection>
                 profile: result.email,
             };
         } catch (error) {
-            logger.error(error);
-            throw new Error(error);
+            logger.error(`[AuthApplication:loginUser]: ${error}`);
+            throw new HttpError(409, `${error}`);
         }
     }
 
@@ -79,8 +79,8 @@ export default class AuthApplication implements IAuthApplication<UserCollection>
             }
 
         } catch (error) {
-            logger.error(error);
-            throw new HttpError(500, error)
+            logger.error(`[AuthApplication:registerUser]: ${error}`);
+            throw new HttpError(500, `${error}`)
         }
     }
 }
