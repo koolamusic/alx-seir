@@ -8,4 +8,5 @@ export default {
 	MONGO_URI_DEV: process.env.MONGO_URI_DEV,
 	KITSU_API: process.env.KITSU_API,
 	JOKES_API: process.env.JOKES_API,
+	VERSION: process.env.VERSION
 };

@@ -5,9 +5,10 @@
  * 3. Add Deserializer for Sessions and protected routes
  */
 import { Request, Response, NextFunction } from 'express'
+import { Authenticator } from 'passport';
 import { Strategy, VerifyFunction, IStrategyOptions } from 'passport-local'
-import { IUser } from '../shared/user.interface';
-// import { getCurrentUser } from './../application/auth';
+import { LoginUserInputDTO } from '../shared/user.interface';
+import AuthApplication from './../application/auth';
 import HttpError from './errors'
 
 
@@ -18,29 +19,25 @@ const strategyOptions: IStrategyOptions = {
     session: true
 }
 
-const mockPayload = {
-    name: "Amaloar",
-    email: 'rubik@mail.com',
-    username: 'rubik@mail.com',
-    password: "123456"
-}
+// const mockPayload = {
+//     name: "Amaloar",
+//     email: 'rubik@mail.com',
+//     username: 'rubik@mail.com',
+//     password: "123456"
+// }
 
-const verifyUser: VerifyFunction = async (_username, _password, done) => {
-    console.log("GOT FIRED")
-    return done(null, mockPayload)
-
-    // try {
-    //     if (username && password) {
-    //         const user = await getCurrentUser({ email: username })
-    //         if (!user) {
-    //             throw new HttpError(401);
-    //         }
-    //         return done(null, user)
-    //     }
-    // } catch (error) {
-    //     done(error)
-    //     throw new HttpError(401);
-    // }
+const verifyUser: VerifyFunction = async (username, password, done) => {
+    try {
+        if (username && password) {
+            const user = await AuthApplication.getCurrentUser({ email: username })
+            if (!user) {
+                throw new HttpError(401);
+            }
+            return done(null, user)
+        }
+    } catch (error) {
+        done(error)
+    }
 
 }
 
@@ -50,7 +47,7 @@ export const localStrategy = new Strategy(strategyOptions, verifyUser)
 /* Middleware to check if user is authenticated in routes */
 export const isAuthenticated = (req: Request, _res: Response, next: NextFunction) => {
     try {
-        console.log(req.isAuthenticated(), req.isUnauthenticated())
+        console.log("is authenticated is =", req.isAuthenticated(), req.isUnauthenticated())
         if (!req.isAuthenticated()) {
             throw new HttpError(401, "You are not authenticated")
         }
@@ -67,23 +64,67 @@ export const userSerializer = async (user: Express.User, done: (err: null, tid: 
     done(null, user);
 }
 
-export const userDeserializer = async (user: IUser, done: (err: any, tid: any) => void) => {
+/* Tell passport how to deserialize the user */
+export const userDeserializer = async (user: LoginUserInputDTO, done: (err: any, tid: any) => void) => {
     try {
         console.log(user)
         if (user && user.email) {
-            // const profile = await getCurrentUser({ email: user.email })
-            let profile = mockPayload
+            const profile = await AuthApplication.getCurrentUser({ email: user.email })
 
             console.log('the profile we got from deserialization', profile)
             done(null, profile)
         }
 
     } catch (error) {
-        done(error, false)
+        done(error, null)
 
     }
 
 }
+
+/**
+ * @function authHandler - Manage the user authentication logic
+ * @param passportHandler - The passport instance object
+ * @param cb = callback function
+ */
+export const authHandler = (passportHandler: Authenticator) => (req: Request, res: Response, next: NextFunction, cb: (...args: any[]) => void) => {
+    return passportHandler.authenticate('local', cb)(req, res, next)
+}
+
+
+
+// (req, res, next) => {
+//     req.body = userInfo;
+//     console.log("In login route", req.user, req.body)
+
+
+//     passport.authenticate('local', (_err, user, info) => {
+//       console.log("IN PASSPORT AUTHENTICATE", info)
+
+//       try {
+
+//         if (!user) {
+//           console.log("I got here for info", info)
+//           throw new HttpError(409)
+//         }
+
+//         req.login(user, function (err) {
+//           console.log("I got here to logins")
+//           if (err) {
+//             logger.error(err)
+//             throw new HttpError(401, err)
+
+//           }
+
+//           return res.redirect('/_healthcheck');
+//         });
+//       } catch (err) {
+//         res.json(err)
+//       }
+
+//     })
+//       (req, res, next);
+
 
 
 //   authservice.getUser***

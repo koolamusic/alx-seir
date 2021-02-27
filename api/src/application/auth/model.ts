@@ -3,14 +3,14 @@ import { getModelForClass, prop, DocumentType, pre } from '@typegoose/typegoose'
 
 
 /* Typegoose Hook to hash password and save into db record */
-@pre<User>('save', function () {
+@pre<UserCollection>('save', function () {
     if (this.isModified('password') || this.isNew) {
         this.password = crypto.encryptPassword(this.password)
     }
 })
 
 /* Declare user class */
-class User {
+export class UserCollection {
 
     @prop({ required: true, unique: true, alias: 'username' })
     public email!: string;
@@ -19,9 +19,9 @@ class User {
     public password!: string;
 
     @prop()
-    public name?: string;
+    public name!: string;
 
-    public async validatePassword(this: DocumentType<User>, inputPassword: string) {
+    public async validatePassword(this: DocumentType<UserCollection>, inputPassword: string) {
         return crypto.validPassword(this.password, inputPassword)
     }
 }
@@ -29,4 +29,4 @@ class User {
 
 
 
-export const UserModel = getModelForClass(User)
+export const UserModel = getModelForClass(UserCollection)

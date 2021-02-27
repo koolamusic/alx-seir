@@ -39,7 +39,7 @@ export default class HttpError extends Error {
             case 422:
                 this.status = 422;
                 this.name = 'Validation error';
-                this.message = message || 'Please check your data.';
+                this.message = message || 'Could not validate request body.';
                 break;
             default:
                 this.status = 500;
