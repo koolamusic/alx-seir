@@ -1,7 +1,9 @@
+import logger from './core/logger';
 import cors from 'cors';
 import MongoStore from 'connect-mongo'
 import express, { NextFunction, Response, Request } from 'express';
 import session from 'express-session';
+import { encode } from 'js-base64'
 import { nanoid } from 'nanoid'
 import passport from 'passport'
 import messengerRoute from './controllers/messenger/routes';
@@ -26,12 +28,15 @@ const mongoStore = MongoStore.create({
 })
 
 
+
 /* configure session middleware */
 const sessionMiddleware = session({
   genid: (req) => {
-    console.log('Inside the session middleware')
+    const encodeUser = req.user && encode(JSON.stringify(req.user))
     console.log(req.session)
-    return nanoid()
+    console.log('Inside the session middleware')
+    logger.debug(encodeUser)
+    return encode(JSON.stringify(req.user) || nanoid())
   },
   store: mongoStore,
   name: "__jedi.sid__",
@@ -65,7 +70,7 @@ server.use('/messenger',
   messengerRoute);
 
 server.use('/_healthcheck', (_req: Request, res) => {
-  console.log(_req.session, _req.isAuthenticated(), _req.user)
+  console.log(_req.session, _req.isAuthenticated(), _req.sessionID)
   res.status(200).json({ uptime: process.uptime() });
 });
 
