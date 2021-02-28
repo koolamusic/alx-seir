@@ -62,6 +62,7 @@ server.use(`/${secrets.VERSION}/auth`, authRoute);
 
 server.post('/login', (req, res, next) => authHandler(passport)(req, res, next))
 
+
 server.use('/_healthcheck', (_req: Request, res) => {
   console.log(_req.session, _req.isAuthenticated(), _req.sessionID)
   res.status(200).json({ uptime: process.uptime() });
