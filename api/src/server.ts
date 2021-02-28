@@ -2,21 +2,24 @@ import cors from 'cors';
 import MongoStore from 'connect-mongo'
 import express, { NextFunction, Response, Request } from 'express';
 import session from 'express-session';
-import { nanoid } from 'nanoid'
 import passport from 'passport'
-import messengerRoute from './controllers/messenger/routes';
 import secrets from './core/secrets';
-import * as strategy from './core/auth'
 import HttpError from './core/errors';
+import { authHandler } from './core/auth'
+
+/* API ROUTES */
+import messengerRoute from './controllers/messenger/routes';
+import authRoute from './controllers/auth/routes'
+
 
 const server = express();
 
-/* Enable cors:: should limit origin once stabls */
+/* Enable cors:: should limit origin once stable */
 server.use(
   cors({
     methods: ['GET', 'POST', 'PATCH'],
     credentials: true,
-    origin: '*',
+    origin: ['*', '*.alxseri.xyz'],
   })
 );
 
@@ -26,18 +29,14 @@ const mongoStore = MongoStore.create({
 })
 
 
+
 /* configure session middleware */
 const sessionMiddleware = session({
-  genid: (req) => {
-    console.log('Inside the session middleware')
-    console.log(req.session)
-    return nanoid()
-  },
   store: mongoStore,
   name: "__jedi.sid__",
   cookie: {
     httpOnly: true,
-    signed: false,
+    signed: true,
     maxAge: 60000,
     // domain: '*.alxseri.xyz, localhost'
   },
@@ -48,9 +47,6 @@ const sessionMiddleware = session({
 })
 
 /* Sessions and authentication Middleware */
-passport.use(strategy.localStrategy)
-passport.serializeUser(strategy.userSerializer)
-passport.deserializeUser(strategy.userDeserializer)
 server.use(sessionMiddleware)
 server.use(passport.initialize())
 server.use(passport.session())
@@ -60,14 +56,25 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
 /* For the UI and API Routes */
-server.use('/messenger',
-  // passport.authenticate('local', { failureRedirect: '/_healthcheck' }), // Temp test for passport
-  messengerRoute);
+server.use(`/${secrets.VERSION}/messenger`, messengerRoute);
+server.use(`/${secrets.VERSION}/auth`, authRoute);
+
+
+server.post('/login', (req, res, next) => authHandler(passport)(req, res, next))
 
 server.use('/_healthcheck', (_req: Request, res) => {
-  console.log(_req.session, _req.isAuthenticated(), _req.user)
+  console.log(_req.session, _req.isAuthenticated(), _req.sessionID)
   res.status(200).json({ uptime: process.uptime() });
 });
+
+
+/* Logout Route */
+server.use('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/_healthcheck')
+  // res.status(200).json({ success: true, message: 'logout successful' })
+});
+
 
 /* Global Error Handler to throw Errors into API Response */
 server.use("*", (error: HttpError, _req: Request, res: Response, _next: NextFunction) => {
@@ -79,70 +86,6 @@ server.use("*", (error: HttpError, _req: Request, res: Response, _next: NextFunc
   });
 });
 
-const userInfo = {
-  name: "Amaloar",
-  email: 'rubik@mail.com',
-  username: 'rubik@mail.com',
-  password: "123456"
-}
-
-server.post('/login', (req, res, next) => {
-  req.body = userInfo;
-
-  passport.authenticate('local',
-    (err, user, info) => {
-      console.log(user, info)
-      if (err) {
-        throw new Error(err);
-      }
-
-      if (!user) {
-        return res.redirect('/login?info=' + info);
-      }
-
-      req.login(user, function (err) {
-        if (err) {
-          return next(err);
-        }
-
-        return res.redirect('/_healthcheck');
-      });
-
-    })(req, res, next);
-});
-
-
-
-// server.post('/login', (req, res, next) => {
-//   try {
-//     passport.authenticate('local', (err, user, info) => {
-//       console.log("This is payload of user", user)
-//       const payload = {
-//         name: "Amaloar",
-//         email: 'rubik@mail.com',
-//         username: 'rubik@mail.com',
-//         password: "123456"
-//       }
-//       if (info) { return res.json(info.message) }
-//       if (err) { return next(err); }
-//       if (!payload) { return res.redirect('/login'); }
-
-//       req.login(payload, (err) => {
-//         if (err) { throw new Error(err); }
-//         return res.redirect('/_healthcheck');
-//       })
-//     })(req, res, next);
-
-//   } catch (error) {
-//     throw new Error(error)
-//   }
-// })
-
-/* Logout Route */
-server.use('/logout', (req, res) => {
-  req.logout();
-  res.status(200).json({ success: true, message: 'logout successful' })
-});
 
 
 export default server;
