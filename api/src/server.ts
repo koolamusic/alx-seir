@@ -40,7 +40,7 @@ const sessionMiddleware = session({
     maxAge: 60000,
     // domain: '*.alxseri.xyz, localhost'
   },
-  secret: 'w8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
+  secret: secrets.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
   rolling: true,

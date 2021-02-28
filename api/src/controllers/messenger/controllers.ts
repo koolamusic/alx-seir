@@ -1,8 +1,9 @@
 import { createProxyMiddleware, Options } from 'http-proxy-middleware';
+import secrets from '../../core/secrets'
 
 
 const jokesApiProxyOptions: Options = {
-  target: 'https://official-joke-api.appspot.com/',
+  target: secrets.JOKES_API,
   changeOrigin: true, // needed for virtual hosted sites
   pathRewrite: {
     '^/v1/outbox/jokes': '/jokes', // rewrite path
@@ -10,7 +11,7 @@ const jokesApiProxyOptions: Options = {
 }
 
 const mangaApiProxyOptions: Options = {
-  target: 'https://kitsu.io/api/edge',
+  target: secrets.KITSU_API,
   changeOrigin: true,
   pathRewrite: {
     '^/v1/outbox/manga': '/manga',
