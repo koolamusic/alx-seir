@@ -5,7 +5,7 @@ import session from 'express-session';
 import passport from 'passport'
 import secrets from './core/secrets';
 import HttpError from './core/errors';
-import logger from './core/logger'
+import { authHandler } from './core/auth'
 
 /* API ROUTES */
 import messengerRoute from './controllers/messenger/routes';
@@ -60,48 +60,7 @@ server.use(`/${secrets.VERSION}/messenger`, messengerRoute);
 server.use(`/${secrets.VERSION}/auth`, authRoute);
 
 
-// const userInfo = {
-//   name: "Amaloar",
-//   email: 'rubik@mail.com',
-//   username: 'rubik@mail.com',
-//   password: "123456"
-// }
-
-server.post('/login', (req, res, next) => {
-  console.log("In login route", req.user, req.body)
-
-
-  passport.authenticate('local', (_err, user, info) => {
-    console.log("IN PASSPORT AUTHENTICATE", info)
-
-    try {
-
-      if (!user) {
-        console.log("I got here for info", info)
-        throw new HttpError(422)
-      }
-
-      req.login(user, function (err) {
-        console.log("I got here to logins")
-        if (err) {
-          logger.error(err)
-          throw new HttpError(401, err)
-
-        }
-
-        return res.redirect('/_healthcheck');
-      });
-    } catch (err) {
-      res.json(err)
-    }
-
-  })
-    (req, res, next);
-
-
-
-});
-
+server.post('/login', (req, res, next) => authHandler(passport)(req, res, next))
 
 server.use('/_healthcheck', (_req: Request, res) => {
   console.log(_req.session, _req.isAuthenticated(), _req.sessionID)
@@ -112,7 +71,8 @@ server.use('/_healthcheck', (_req: Request, res) => {
 /* Logout Route */
 server.use('/logout', (req, res) => {
   req.logout();
-  res.status(200).json({ success: true, message: 'logout successful' })
+  res.redirect('/_healthcheck')
+  // res.status(200).json({ success: true, message: 'logout successful' })
 });
 
 

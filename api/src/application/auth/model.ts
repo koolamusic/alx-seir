@@ -12,7 +12,7 @@ import { getModelForClass, prop, DocumentType, pre } from '@typegoose/typegoose'
 /* Declare user class */
 export class UserCollection {
 
-    @prop({ required: true, unique: true, alias: 'username' })
+    @prop({ required: true, unique: true })
     public email!: string;
 
     @prop({ required: true })
@@ -22,7 +22,7 @@ export class UserCollection {
     public name!: string;
 
     public async validatePassword(this: DocumentType<UserCollection>, inputPassword: string) {
-        return crypto.validPassword(this.password, inputPassword)
+        return crypto.validPassword(inputPassword, this.password)
     }
 }
 

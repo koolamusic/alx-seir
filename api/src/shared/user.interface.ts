@@ -24,3 +24,10 @@ export interface RegisterUserDTO {
 }
 
 export interface IAccountProfile extends DocumentType<UserCollection> { }
+
+export interface IAuthApplication<T> {
+    validateUser: (user: T) => Promise<DocumentType<UserCollection>>
+    getCurrentUser?: (user: T) => Promise<DocumentType<UserCollection> | null>
+    loginUser: (user: T) => Promise<LoginUserDTO>
+    registerUser: (user: RegisterUserInputDTO) => Promise<RegisterUserDTO>
+}

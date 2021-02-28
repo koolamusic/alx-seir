@@ -4,18 +4,20 @@
  * 2. Add Serializer for Authentication
  * 3. Add Deserializer for Sessions and protected routes
  */
+import passport from 'passport';
 import { Request, Response, NextFunction } from 'express'
-import { Authenticator } from 'passport';
-import { Strategy, VerifyFunction, IStrategyOptions } from 'passport-local'
+import { Strategy, IStrategyOptionsWithRequest, VerifyFunctionWithRequest } from 'passport-local'
 import { LoginUserInputDTO } from '../shared/user.interface';
 import AuthApplication from './../application/auth';
 import HttpError from './errors'
+import logger from './logger'
 
 
 /* Passport local strategy options */
-const strategyOptions: IStrategyOptions = {
+const strategyOptions: IStrategyOptionsWithRequest = {
     usernameField: 'email',
     passwordField: 'password',
+    passReqToCallback: true,
     session: true
 }
 
@@ -26,10 +28,10 @@ const strategyOptions: IStrategyOptions = {
 //     password: "123456"
 // }
 
-const verifyUser: VerifyFunction = async (username, password, done) => {
+const verifyUser: VerifyFunctionWithRequest = async (_req, username, password, done) => {
     try {
         if (username && password) {
-            const user = await AuthApplication.getCurrentUser({ email: username })
+            const user = await new AuthApplication().validateUser({ email: username, password })
             if (!user) {
                 throw new HttpError(401);
             }
@@ -77,7 +79,6 @@ export const userDeserializer = async (user: LoginUserInputDTO, done: (err: any,
 
     } catch (error) {
         done(error, null)
-
     }
 
 }
@@ -87,56 +88,40 @@ export const userDeserializer = async (user: LoginUserInputDTO, done: (err: any,
  * @param passportHandler - The passport instance object
  * @param cb = callback function
  */
-export const authHandler = (passportHandler: Authenticator) => (req: Request, res: Response, next: NextFunction, cb: (...args: any[]) => void) => {
-    return passportHandler.authenticate('local', cb)(req, res, next)
+
+export const authHandler = (passportHandler: passport.PassportStatic) => (req: Request, res: Response, next: NextFunction) => {
+    console.log("In Authentication Handler",)
+    const passportCallback = (err: any, user: Request, info: any) => {
+        console.log("IN PASSPORT AUTHENTICATE CALLBACK", user)
+        try {
+
+            if (err) {
+                throw new HttpError(409, `${err}`)
+            }
+
+            if (!user) {
+                throw new HttpError(409, `login credentials: ${info}`)
+            }
+
+            req.login(user, function (err) {
+                console.log("0000000000000000")
+                if (err) {
+                    logger.error(`[strategy:authHandler] ${err}`)
+                    throw new HttpError(401, err)
+
+                }
+                return res.redirect('/_healthcheck');
+            });
+
+        } catch (err) {
+            logger.error(`[strategy:authHandler] ${err}`)
+            throw new HttpError(409, `${err}`)
+
+        }
+    }
+
+    passportHandler.authenticate('local', passportCallback)(req, res, next)
 }
-
-
-
-// (req, res, next) => {
-//     req.body = userInfo;
-//     console.log("In login route", req.user, req.body)
-
-
-//     passport.authenticate('local', (_err, user, info) => {
-//       console.log("IN PASSPORT AUTHENTICATE", info)
-
-//       try {
-
-//         if (!user) {
-//           console.log("I got here for info", info)
-//           throw new HttpError(409)
-//         }
-
-//         req.login(user, function (err) {
-//           console.log("I got here to logins")
-//           if (err) {
-//             logger.error(err)
-//             throw new HttpError(401, err)
-
-//           }
-
-//           return res.redirect('/_healthcheck');
-//         });
-//       } catch (err) {
-//         res.json(err)
-//       }
-
-//     })
-//       (req, res, next);
-
-
-
-//   authservice.getUser***
-//     User.findById(id, function(err, user) {
-//       done(err, user);
-//     });
-//   });
-
-// passport.serializeUser((user: { id: any; }, done: (arg0: null, arg1: any) => void) => {
-//     console.log('Inside serializeUser callback. User id is save to the session file store here')
-//     done(null, user.id);
-// });
 
 
 
