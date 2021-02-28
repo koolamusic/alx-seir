@@ -4,7 +4,7 @@ import AuthApplication from '../../application/auth';
 
 import { RegisterController, LoginController, ProfileController } from './controllers';
 import { RegisterUserInputDTO, IAuthApplication } from '../../shared/user.interface';
-import * as strategy from '../../core/auth'
+import { isAuthenticated } from '../../core/auth'
 
 /* Initialize methods */
 const router = express.Router();
@@ -16,7 +16,7 @@ const profileController = new ProfileController()
 
 router.post('/login', (req, res, next) => loginController.execute(req, res, next));
 router.post('/signup', (req, res, next) => registerController.execute(req, res, next));
-router.post('/profile', [strategy.isAuthenticated], (req: Request, res: Response, next: NextFunction) => profileController.execute(req, res, next));
+router.post('/profile', [isAuthenticated], (req: Request, res: Response, next: NextFunction) => profileController.execute(req, res, next));
 
 export default router;
 

@@ -56,7 +56,7 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
 /* For the UI and API Routes */
-server.use(`/${secrets.VERSION}/messenger`, messengerRoute);
+server.use(`/${secrets.VERSION}/outbox`, messengerRoute);
 server.use(`/${secrets.VERSION}/auth`, authRoute);
 
 
