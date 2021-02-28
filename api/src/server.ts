@@ -56,11 +56,12 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
 /* For the UI and API Routes */
-server.use(`/${secrets.VERSION}/messenger`, messengerRoute);
+server.use(`/${secrets.VERSION}/outbox`, messengerRoute);
 server.use(`/${secrets.VERSION}/auth`, authRoute);
 
 
 server.post('/login', (req, res, next) => authHandler(passport)(req, res, next))
+
 
 server.use('/_healthcheck', (_req: Request, res) => {
   console.log(_req.session, _req.isAuthenticated(), _req.sessionID)

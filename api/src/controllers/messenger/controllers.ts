@@ -1,32 +1,21 @@
-import { Request, Response, NextFunction } from 'express';
+import { createProxyMiddleware, Options } from 'http-proxy-middleware';
 
-export default {
-  create: async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
 
-    try {
-      const model = req.body;
-      const data = { holder: model };
-      if (data !== null) {
-        res.status(201).json({
-          status: 'success',
-          data,
-        });
-      }
-    } catch (error) {
-      next(error);
-    }
-  },
-  show: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const data = await { holder: id };
-      res.status(200).json({
-        status: 'success',
-        data,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
-};
+const jokesApiProxyOptions: Options = {
+  target: 'https://official-joke-api.appspot.com/',
+  changeOrigin: true, // needed for virtual hosted sites
+  pathRewrite: {
+    '^/v1/outbox/jokes': '/jokes', // rewrite path
+  }
+}
+
+const mangaApiProxyOptions: Options = {
+  target: 'https://kitsu.io/api/edge',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/v1/outbox/manga': '/manga',
+  }
+}
+
+export const jokesApiProxyMiddleware = createProxyMiddleware(jokesApiProxyOptions)
+export const mangaApiProxyMiddleware = createProxyMiddleware(mangaApiProxyOptions)
