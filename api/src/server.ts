@@ -17,9 +17,9 @@ const server = express();
 /* Enable cors:: should limit origin once stable */
 server.use(
   cors({
-    methods: ['GET', 'POST', 'PATCH'],
+    methods: ['GET', 'POST', 'PUT'],
     credentials: true,
-    origin: ['*', '*.alxseri.xyz'],
+    origin: ["http://localhost:3000", "http://localhost:3200"],
   })
 );
 
@@ -33,9 +33,9 @@ const mongoStore = MongoStore.create({
 /* configure session middleware */
 const sessionMiddleware = session({
   store: mongoStore,
-  name: "__jedi.sid__",
+  name: "__app.sid",
   cookie: {
-    httpOnly: true,
+    httpOnly: false,
     signed: true,
     maxAge: 60000,
     // domain: '*.alxseri.xyz, localhost'

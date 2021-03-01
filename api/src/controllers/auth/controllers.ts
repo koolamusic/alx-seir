@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { PassportStatic } from 'passport';
+import onHeaders from 'on-headers'
 import { encode } from 'js-base64'
 import AuthApplication from '../../application/auth';
 import HttpError from '../../core/errors';
@@ -45,19 +46,28 @@ export class LoginController extends BaseController {
 
                 /* Execute login in Express Request */
                 req.login(user, (err) => {
-                    console.log("0000000000000000")
                     if (err) {
                         logger.error(`[LoginController:passportCallback] ${err}`)
                         throw new HttpError(401, err)
                     }
                     const userProfile = {
-                        _id: user._id,
+                        _id: JSON.stringify(res.cookie),
                         profile: encode(JSON.stringify({
                             _id: user._id,
                             email: user.email,
                             name: user.name,
                         }))
                     };
+
+
+                    onHeaders(res, function () {
+                        // Try to get the final Set Cookie Headers
+                        console.log(res.get('Set-Cookie'), "--------- COOKIES---------");
+                    });
+
+
+
+                    console.log(userProfile, res.get('user'))
                     this.success<LoginUserDTO>(res, userProfile)
                 });
 

@@ -104,7 +104,6 @@ export const authHandler = (passportHandler: passport.PassportStatic) => (req: R
             }
 
             req.login(user, function (err) {
-                console.log("0000000000000000")
                 if (err) {
                     logger.error(`[strategy:authHandler] ${err}`)
                     throw new HttpError(401, err)

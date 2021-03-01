@@ -30,6 +30,7 @@
 		"@types/bcrypt": "^3.0.0",
 		"@types/express-session": "^1.17.3",
 		"@types/nanoid": "^2.1.0",
+		"@types/on-headers": "^1.0.0",
 		"bcrypt": "^5.0.1",
 		"connect-mongo": "^4.2.0",
 		"cors": "^2.8.5",
@@ -41,10 +42,12 @@
 		"lodash": "^4.17.20",
 		"mongoose": "^5.10.18",
 		"nanoid": "^3.1.20",
+		"on-headers": "^1.0.2",
 		"passport": "^0.4.1",
 		"passport-local": "^1.0.0",
 		"ts-node": "9.0.0",
-		"winston": "3.3.3"
+		"winston": "3.3.3",
+		"zlib": "^1.0.5"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.8",
