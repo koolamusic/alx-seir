@@ -6,3 +6,5 @@
  * @method getToken - get Token from browser
  * @method isAuth - Check that user is authenticated
  */
+
+export default {}

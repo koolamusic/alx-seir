@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Box, Avatar, Heading, Flex, Divider, Text, AvatarBadge, Stack } from '@chakra-ui/react';
+import { Box, Avatar, Heading, Flex, Divider, Badge, Text, AvatarBadge, Stack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { styleConstants } from '../utils/helpers';
 
@@ -20,18 +20,27 @@ const HeaderDefault = styled(HeaderBox)`
     border-bottom: 1px solid #dddddd;
 `;
 
-export const HeaderElement: React.FC = () => {
+export const HeaderElement: React.FC<{ name: string }> = ({ name }) => {
     return (
         <>
             <Link href="/">
-                <h2>Alxseri</h2>
+                <Heading as="h1" size="sm">Alxseri</Heading>
             </Link>
 
             <Stack isInline alignItems="center" justifyContent="flex-end" width="130px">
-
-                <Avatar name="Fibonnaci Couture" size="sm">
+                <Avatar cursor="pointer" name={name} size="sm">
                     <AvatarBadge size="1rem" bg="green.500" />
                 </Avatar>
+
+                <Link href="/logout">
+                    <Badge
+                        _hover={{
+                            opacity: '0.7'
+                        }}
+                        cursor="pointer"
+                        fontSize=".85rem"
+                        colorScheme="red">Logout</Badge>
+                </Link>
             </Stack>
         </>
     );
@@ -45,7 +54,7 @@ export const Header: React.FC<{ isDefault?: boolean; isBordered?: boolean }> = (
         <header>
             {isDefault ? (
                 <HeaderDefault display="flex" bg="white" width="100%" alignItems="center">
-                    <HeaderElement />
+                    <HeaderElement name="Fibonnaci Couture" />
                 </HeaderDefault>
             ) : (
                     <HeaderBox
@@ -54,7 +63,7 @@ export const Header: React.FC<{ isDefault?: boolean; isBordered?: boolean }> = (
                         width="100%"
                         alignItems="center"
                     >
-                        <HeaderElement />
+                        <HeaderElement name="Fibonnaci Couture" />
                     </HeaderBox>
                 )}
         </header>

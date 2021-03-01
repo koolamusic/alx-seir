@@ -3,7 +3,7 @@ import { uniqueNamesGenerator, Config, starWars, names } from 'unique-names-gene
 const randomNameConfig: Config = {
     dictionaries: [starWars, names],
     separator: ' ',
-    length: 1
+    length: 2
 }
 
 export const generateRandomName = () => uniqueNamesGenerator(randomNameConfig)

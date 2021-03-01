@@ -13,7 +13,7 @@ import { Box } from '@chakra-ui/react';
 
 export default function Page(): JSX.Element {
     const { register, handleSubmit } = useForm();
-    const [randomName, setRandomName] = useState<string>('Red Minton')
+    const [randomName, setRandomName] = useState<string>('')
 
     useEffect(() => {
         setRandomName(generateRandomName())
@@ -68,7 +68,7 @@ export default function Page(): JSX.Element {
                 {/* === form input subsection  === */}
 
                 <SubmitButton mt={8} withIcon buttonName="Create Account" />
-                <Box mb={6} mt={3} fontSize={14} color="gray.600">
+                <Box mb={6} mt={3} fontSize=".9rem" color="gray.600">
                     <Link href="/login">Already have an account? Login</Link>
                 </Box>
 
