@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link'
 import { useForm } from 'react-hook-form';
+import { Box } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons'
 
 import { FormLayout, SubmitButton } from '../components/Layout'
 import { FormPageHeader } from '../components/Header'
 import { InputField, PasswordField } from '../components/Fields';
 import { generateRandomName } from '../utils/helpers'
-import { Box } from '@chakra-ui/react';
+import ResourceFactory from '../utils/adapter'
 
+const baseURL = 'http://localhost:4000';
+
+
+const defaultConfig = {
+    baseURL: baseURL,
+    headers: {
+        'X-Request-With': 'XMLHttpRequest'
+    }
+};
+
+ResourceFactory.updateDefaults(defaultConfig)
+
+class Signup extends ResourceFactory.createResource("/v1/auth/signup") { }
 
 
 export default function Page(): JSX.Element {
@@ -24,6 +38,9 @@ export default function Page(): JSX.Element {
 
     const onSubmit = async (data: any): Promise<void> => {
         console.log(data, randomName)
+        const result = await Signup.save(data)
+        console.log(result)
+
     };
 
     return (
