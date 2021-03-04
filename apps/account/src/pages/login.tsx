@@ -27,7 +27,7 @@ class Login extends ResourceFactory.createResource("/v1/auth/login") { }
 
 
 
-export default function Page(props: any): JSX.Element {
+export default function Page(): JSX.Element {
     const { register, handleSubmit } = useForm();
 
 
@@ -48,7 +48,6 @@ export default function Page(props: any): JSX.Element {
                 formHeading="Welcome back seri"
                 formSubHeading="Login to your account to access your profile 😀"
             />
-            <p>{JSON.stringify(props)}</p>
 
             <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -81,20 +80,7 @@ export default function Page(props: any): JSX.Element {
 
     )
 }
-// const complex =
-//     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) Ap…ML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 
-
-// Page.getInitialProps = async (ctx: NextPageContext) => {
-//     nookies.set(ctx, 'one', complex, {})
-//     nookies.set(ctx, 'two', complex, {})
-//     nookies.set(ctx, 'three', "hey! this one's simple :)", {})
-
-//     console.log(ctx.req)
-//     return {
-//         server: true,
-//     }
-// }
 
 export async function getServerSideProps(ctx: NextPageContext) {
     // Parse
