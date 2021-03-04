@@ -12,9 +12,10 @@ const MangaCard = ({ mr, width, detail }: MangaCardProps) => {
     console.log("THESE ARE DETAILS", detail)
     return (
         <Box
-            h={210}
-            w={width || 80}
+            h={415.5}
+            w={width || 292.5}
             mr={mr}
+            mb={6}
             pos='relative'
             overflow='hidden'
             rounded='20px'
