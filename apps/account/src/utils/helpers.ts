@@ -39,3 +39,18 @@ export const styleConstants = {
     main: 'green.600',
     green800: '#22543d',
 };
+
+export type TMangaCollection = {
+    canonicalTitle: string;
+    description: string;
+    chapterCount: number;
+    createdAt: Date;
+    popularityRank: string;
+    posterImage: {
+        medium: string;
+        small: string
+    };
+    serialization: string;
+
+    [x: string]: string | Record<string, any> | string[] | number | Record<string, any>[]
+}

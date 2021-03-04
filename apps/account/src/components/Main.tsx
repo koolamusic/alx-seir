@@ -5,7 +5,8 @@ export const Main: React.FC<BoxProps> = (props) => {
   return <Box
     spacing="1.5rem"
     width="100%"
-    maxWidth="48rem"
+    margin=" 0 auto"
+    maxWidth="1200px"
     pt="8rem"
     px="1rem"
 

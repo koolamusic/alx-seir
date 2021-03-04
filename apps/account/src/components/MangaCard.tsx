@@ -2,10 +2,14 @@
 import React from 'react';
 import { Box, Heading, Image, Text, Flex, Icon, BoxProps } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@chakra-ui/icons';
+import { TMangaCollection } from '../utils/helpers'
 
+interface MangaCardProps extends Partial<BoxProps> {
+    detail: TMangaCollection
+}
 
-
-const MovieCard = ({ mr, width }: BoxProps) => {
+const MangaCard = ({ mr, width, detail }: MangaCardProps) => {
+    console.log("THESE ARE DETAILS", detail)
     return (
         <Box
             h={210}
@@ -34,7 +38,7 @@ const MovieCard = ({ mr, width }: BoxProps) => {
                 w='100%'
                 h='100%'
                 objectFit='cover'
-                src='https://www.fact-checkghana.com/wp-content/uploads/2020/06/Nana-Akufo-Addo-770x545.jpg'
+                src={detail.posterImage?.medium || ""}
             />
             <Flex
                 align='center'
@@ -93,4 +97,4 @@ const MovieCard = ({ mr, width }: BoxProps) => {
     );
 };
 
-export default MovieCard;
+export default MangaCard;

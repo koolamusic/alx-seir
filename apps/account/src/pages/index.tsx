@@ -1,11 +1,15 @@
+import React, { useCallback } from 'react';
 import {
   Link as ChakraLink,
   Text,
+  Box,
   Code,
   List,
   ListIcon,
   ListItem,
-  Grid
+  Grid,
+  Spinner,
+  Flex
 } from '@chakra-ui/react'
 import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
 import nookies, { parseCookies, setCookie } from 'nookies'
@@ -13,7 +17,7 @@ import { NextPageContext } from 'next'
 
 import { Wrapper } from '../components/Container'
 import { Main } from '../components/Main'
-import MovieCard from '../components/MovieCard'
+import MangaCard from '../components/MangaCard'
 import { Header } from '../components/Header'
 
 import ResourceFactory from '../utils/adapter'
@@ -29,61 +33,113 @@ const defaultConfig = {
 
 ResourceFactory.updateDefaults(defaultConfig)
 class Manga extends ResourceFactory.createResource("/v1/outbox/manga") { }
+class Jokes extends ResourceFactory.createResource("/v1/outbox/jokes/ten") { }
 
 
+type TJokesCollection = {
+  type: string | number;
+  id: number;
+  setup: string;
+  punchline: string
+}[]
 
-export default function Page(props: any): JSX.Element {
+type TMangaCollection = {
+  id: string;
+  type: string;
+  attributes: {
+    canonicalTitle: string;
+    description: string;
+    chapterCount: number;
+    createdAt: Date;
+    popularityRank: string;
+    posterImage: {
+      medium: string;
+      small: string
+    };
+    serialization: string;
+
+    [x: string]: string | Record<string, any> | string[] | number | Record<string, any>[]
+  },
+  links: Record<string, any>;
+  relationships: Record<string, any>
+}[]
 
 
-  const onRequest = async (data: any): Promise<void> => {
-    console.log(data, "DATA IN PAYLOAD REQUEST")
-    // setCookie(null, 'fromClient', 'rudimentary-closure', {
-    //   maxAge: 30 * 24 * 60 * 60,
-    //   path: '/',
-    // })
+export default function Page(): JSX.Element {
+  const [mangaCollection, setMangaCollection] = React.useState<TMangaCollection>([])
+  const [jokesCollection, setJokesCollection] = React.useState<TJokesCollection>([])
 
-    console.warn(parseCookies(), "cookies from nookies")
+  const fetchResources = useCallback(async () => {
     try {
-      const result = await Manga.list()
-      alert(result.status)
-      console.log(result.data)
+      const manga = await Manga.list()
+      const jokes = await Jokes.get('/ten')
+
+      console.log(manga, jokes)
+      /* Update state object */
+      manga && await setMangaCollection(manga.data.data)
+      jokes && await setJokesCollection(jokes.data)
+
 
     } catch (error) {
       alert(error)
     }
-  };
+  }, [],
+  )
 
-  console.log(props)
 
+
+  React.useEffect(() => {
+    fetchResources()
+  }, []);
+
+
+  if (!jokesCollection && !mangaCollection) {
+    return (
+      <Spinner size="xl" />
+    )
+  }
 
   return (
     <Wrapper>
       <Header isDefault={true} />
+
+
       <Main>
-        <Text>
-          Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
-          <Code>typescript</Code>.
-      </Text>
-        <Grid templateColumns={{ md: 'repeat(4, 1fr)' }} gap={{ md: 2 }}>
-          <MovieCard width={150} />
-          <MovieCard width={150} />
-          <MovieCard width={150} />
-          <MovieCard width={150} />
-        </Grid>
 
 
-        <List spacing={3} my={0}>
-          <ListItem>
-            <ListIcon as={CheckCircleIcon} color="green.500" />
-            <ChakraLink
-              onClick={onRequest}
-              flexGrow={1}
-              mr={2}
-            >
-              Chakra UI <LinkIcon />
-            </ChakraLink>
-          </ListItem>
-        </List>
+
+        {/* ------------ Render the Jokes Collection ---------------- */}
+        <Flex flexWrap="wrap">
+          {jokesCollection.map((value, idx) => {
+            return (
+              <Box key={[idx, value.id].join("__")}>
+                <Box>
+                  <h4>{value.setup}</h4>
+                  <h1>{value.punchline}</h1>
+                </Box>
+
+              </Box>
+            )
+          })}
+        </Flex>
+        {/* ------------ Render the Jokes Collection ---------------- */}
+
+
+        {/* -------------- Render the Manga Anime Collections here ---------------- */}
+        <Flex flexWrap="wrap" justify="space-between" width="100%">
+          {mangaCollection.map((value, idx) => {
+            const { attributes } = value
+            return (
+              <Box key={[idx, value.id].join("__")}>
+                <MangaCard detail={attributes} />
+
+              </Box>
+            )
+          })}
+        </Flex>
+        {/* -------------- Render the Manga Anime Collections here ---------------- */}
+
+
       </Main>
 
     </Wrapper>
