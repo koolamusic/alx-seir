@@ -4,9 +4,8 @@ FROM node:13.12.0-alpine
 WORKDIR /workspace
 
 # COPY package.json /workspace/
-# COPY ./ ./
+# COPY . .
 COPY ./apps/api ./
-# RUN cd apps/api
 
 
 RUN npm install
