@@ -19,7 +19,7 @@ server.use(
   cors({
     methods: ['GET', 'POST', 'PUT'],
     credentials: true,
-    origin: ["http://localhost:3000", secrets.FRONTEND_ONE, "http://localhost:3200"],
+    origin: secrets.IS_PROD ? secrets.FRONTEND_ONE : "http://localhost:3000",
   })
 );
 
@@ -36,9 +36,11 @@ const sessionMiddleware = session({
   name: "__app.sid",
   cookie: {
     httpOnly: false,
+    secure: 'auto',
     signed: true,
     maxAge: 60000,
-    domain: '*.alxseri.xyz, localhost, *.vercel.app'
+    domain: secrets.IS_PROD ? '*.alxseri.xyz' : 'localhost:3000'
+    // domain: '*.alxseri.xyz, localhost, *.vercel.app'
   },
   secret: secrets.SESSION_SECRET as string,
   resave: false,
