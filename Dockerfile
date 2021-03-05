@@ -1,15 +1,15 @@
 FROM node:13.12.0-alpine
 
 
+WORKDIR /workspace
+
+# COPY package.json /workspace/
+# COPY ./ ./
+COPY . .
 RUN cd apps/api
 
-WORKDIR /workspace
-COPY package.json /workspace/
 
 RUN npm install
-
-COPY . .
-
 RUN npm build
 
 ## build production app
@@ -18,3 +18,4 @@ ENV NODE_ENV production
 
 # CMD ["node", "dist/main"]
 CMD ["npm", "start"]
+
