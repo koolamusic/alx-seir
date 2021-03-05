@@ -19,7 +19,7 @@ server.use(
   cors({
     methods: ['GET', 'POST', 'PUT'],
     credentials: true,
-    origin: ["http://localhost:3000", "http://localhost:3200"],
+    origin: ["http://localhost:3000", "http://a6da30e8feb1.ngrok.io", "https://a6da30e8feb1.ngrok.io", "http://localhost:3200"],
   })
 );
 

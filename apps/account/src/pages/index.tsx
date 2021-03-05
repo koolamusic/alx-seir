@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { NextPageContext } from 'next'
+import Head from 'next/head'
 import styled from '@emotion/styled'
 import { TMangaCollection, TJokesCollection } from '../utils/helpers'
 import {
@@ -109,6 +110,9 @@ export default function Page(): JSX.Element {
 
   return (
     <>
+      <Head>
+        <title>ALX Seri | Software Engineer Resident in 🤐</title>
+      </Head>
       <Header isDefault={true} />
       <Wrapper>
 

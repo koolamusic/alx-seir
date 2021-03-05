@@ -2,7 +2,9 @@
   "name": "seri-manager",
   "private": true,
   "scripts": {
-    "fmt": "prettier --write '**/*.{js,ts}'"
+    "fmt": "prettier --write '**/*.{js,ts}'",
+    "heroku-postbuild": "npm run build",
+    "install": "lerna run install"
   },
   "prettier": {
     "singleQuote": true,
