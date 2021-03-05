@@ -3,8 +3,11 @@
   "private": true,
   "scripts": {
     "fmt": "prettier --write '**/*.{js,ts}'",
-    "heroku-postbuild": "npm run build",
-    "install": "lerna run install"
+    "install": "lerna run install",
+    "build": "lerna run build",
+    "heroku-postbuild": "cd apps/api && npm run build",
+    "start": "cd apps/api && node dist/entry.js"
+
   },
   "prettier": {
     "singleQuote": true,

@@ -1,2 +1,2 @@
 # client/Procfile
-web: node api/dist/entry.js
+web: cd apps/api && node dist/entry.js
