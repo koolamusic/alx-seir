@@ -5,8 +5,8 @@ WORKDIR /workspace
 
 # COPY package.json /workspace/
 # COPY ./ ./
-COPY . .
-RUN cd apps/api
+COPY ./apps/api ./
+# RUN cd apps/api
 
 
 RUN npm install
