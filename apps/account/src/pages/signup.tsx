@@ -10,7 +10,7 @@ import { InputField, PasswordField } from '../components/Fields';
 import { generateRandomName } from '../utils/helpers'
 import ResourceFactory from '../utils/adapter'
 
-const baseURL = 'http://localhost:4000';
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 
 const defaultConfig = {
