@@ -70,7 +70,7 @@ export default function Page(): JSX.Element {
 
                 {/* === form input subsection  === */}
 
-                <SubmitButton mt={8} withIcon buttonName="Get Started" />
+                <SubmitButton mt={8} withIcon buttonName="Login" />
                 <Box mb={6} mt={3} fontSize=".9rem" color="gray.600">
                     <Link href="/signup">Dont have an account? Signup</Link>
                 </Box>
