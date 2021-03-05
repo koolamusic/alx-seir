@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Box, Avatar, Heading, Flex, Divider, Badge, Text, AvatarBadge, Stack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { styleConstants } from '../utils/helpers';
+import { styleConstants } from '../theme';
 
 const HeaderBox = styled(Box)`
     background-color: ${styleConstants.background};

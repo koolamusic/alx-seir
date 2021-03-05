@@ -1,6 +1,9 @@
 import React, { useCallback } from 'react';
+import { NextPageContext } from 'next'
+import { TMangaCollection, TJokesCollection } from '../utils/helpers'
 import {
   Link as ChakraLink,
+  SimpleGrid,
   Text,
   Box,
   Code,
@@ -9,11 +12,11 @@ import {
   ListItem,
   Grid,
   Spinner,
-  Flex
+  Flex,
+  Stack
 } from '@chakra-ui/react'
 import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
 import nookies, { parseCookies, setCookie } from 'nookies'
-import { NextPageContext } from 'next'
 
 import { Wrapper } from '../components/Container'
 import { Main } from '../components/Main'
@@ -21,6 +24,8 @@ import MangaCard from '../components/MangaCard'
 import { Header } from '../components/Header'
 
 import ResourceFactory from '../utils/adapter'
+import JokeCard from '../components/JokeCard';
+import { styleConstants } from '../theme';
 const baseURL = 'http://localhost:4000';
 
 
@@ -36,33 +41,6 @@ class Manga extends ResourceFactory.createResource("/v1/outbox/manga") { }
 class Jokes extends ResourceFactory.createResource("/v1/outbox/jokes/ten") { }
 
 
-type TJokesCollection = {
-  type: string | number;
-  id: number;
-  setup: string;
-  punchline: string
-}[]
-
-type TMangaCollection = {
-  id: string;
-  type: string;
-  attributes: {
-    canonicalTitle: string;
-    description: string;
-    chapterCount: number;
-    createdAt: Date;
-    popularityRank: string;
-    posterImage: {
-      medium: string;
-      small: string
-    };
-    serialization: string;
-
-    [x: string]: string | Record<string, any> | string[] | number | Record<string, any>[]
-  },
-  links: Record<string, any>;
-  relationships: Record<string, any>
-}[]
 
 
 export default function Page(): JSX.Element {
@@ -100,49 +78,87 @@ export default function Page(): JSX.Element {
   }
 
   return (
-    <Wrapper>
+    <>
       <Header isDefault={true} />
+      <Wrapper>
 
 
-      <Main>
+        {/* =================>  The Jokes Section */}
+        <Main>
+          <Box my={4} mt={8} pt={6}>
+
+            <Text
+              bgGradient="linear(to-l, #7928CA,#FF0080)"
+              bgClip="text"
+              fontSize={["3xl", "5xl"]}
+              fontWeight="bold"
+              my={[3, 6]}
+              py={[2, 4]}
+            >
+              Hear a Joke
+            </Text>
+
+            {/* ------------ Render the Jokes Collection ---------------- */}
+            <SimpleGrid columns={[1, 2, 3, 4]} spacing={10} pb={8}>
+              {jokesCollection.map((value, idx) => {
+                return (
+                  <Box key={[idx, value.id].join("__")}>
+                    <JokeCard jokes={value} />
+                  </Box>
+                )
+              })}
+            </SimpleGrid>
+            {/* ------------ Render the Jokes Collection ---------------- */}
+          </Box>
+        </Main>
+        {/* =================>  The Jokes Section */}
 
 
 
-        {/* ------------ Render the Jokes Collection ---------------- */}
-        <Flex flexWrap="wrap">
-          {jokesCollection.map((value, idx) => {
-            return (
-              <Box key={[idx, value.id].join("__")}>
-                <Box>
-                  <h4>{value.setup}</h4>
-                  <h1>{value.punchline}</h1>
-                </Box>
 
-              </Box>
-            )
-          })}
-        </Flex>
-        {/* ------------ Render the Jokes Collection ---------------- */}
+        <Box width="100%" borderTop={styleConstants.altBorder} background="white">
+
+          <Main>
+
+            <Box>
 
 
-        {/* -------------- Render the Manga Anime Collections here ---------------- */}
-        <Flex flexWrap="wrap" justify="space-between" width="100%">
-          {mangaCollection.map((value, idx) => {
-            const { attributes } = value
-            return (
-              <Box key={[idx, value.id].join("__")}>
-                <MangaCard detail={attributes} />
 
-              </Box>
-            )
-          })}
-        </Flex>
-        {/* -------------- Render the Manga Anime Collections here ---------------- */}
+              <Text
+                bgGradient="linear(to-l, #be3759, #108645)"
+                bgClip="text"
+                fontSize={["3xl", "5xl"]}
+                fontWeight="bold"
+                my={[3, 6]}
+                py={[2, 4]}
+              >
+                Explore Mangas
+            </Text>
 
 
-      </Main>
 
-    </Wrapper>
+              {/* -------------- Render the Manga Anime Collections here ---------------- */}
+              <Stack isInline wrap="wrap" >
+                {/* <SimpleGrid columns={[1, 2, 3, 4]} spacing={4}> */}
+                {mangaCollection.map((value, idx) => {
+                  const { attributes } = value
+                  return (
+                    <Box key={[idx, value.id].join("__")}>
+                      <MangaCard detail={attributes} />
+
+                    </Box>
+                  )
+                })}
+              </Stack>
+              {/* </SimpleGrid> */}
+              {/* -------------- Render the Manga Anime Collections here ---------------- */}
+            </Box>
+
+          </Main>
+        </Box>
+
+      </Wrapper>
+    </>
   )
 }
 
