@@ -6,6 +6,7 @@
 		"build:clean": "rimraf dist",
 		"build:code": "tsc",
 		"start:prod": "node dist/entry.js",
+		"start": "node dist/entry.js",
 		"dev": "nodemon src/entry.ts",
 		"dev:debug": "nodemon --inspect src/entry.ts",
 		"prod": "run-s build && node dist/entry.js",

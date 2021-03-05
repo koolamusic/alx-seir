@@ -1,6 +1,8 @@
 FROM node:13.12.0-alpine
 
 
+RUN cd apps/api
+
 WORKDIR /workspace
 COPY package.json /workspace/
 
