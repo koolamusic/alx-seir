@@ -19,7 +19,7 @@ server.use(
   cors({
     methods: ['GET', 'POST', 'PUT'],
     credentials: true,
-    origin: ["http://localhost:3000", secrets.FRONTEND_ONE, secrets.FRONTEND_TWO, "http://localhost:3200"],
+    origin: ["http://localhost:3000", secrets.FRONTEND_ONE, "http://localhost:3200"],
   })
 );
 
