@@ -33,7 +33,7 @@
 // export const acceptEncoding = 'gzip';
 // export const X_GOOG_MAPS_EXPERIENCE_ID = 'X-GOOG-MAPS-EXPERIENCE-ID';
 
-// const baseURL = 'http://localhost:4000';
+// const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 // const defaultConfig: AxiosRequestConfig = {
 //     baseURL: baseURL,

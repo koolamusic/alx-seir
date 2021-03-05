@@ -9,5 +9,7 @@ export default {
 	KITSU_API: process.env.KITSU_API,
 	JOKES_API: process.env.JOKES_API,
 	VERSION: process.env.VERSION,
-	SESSION_SECRET: process.env.SESSION_SECRET
+	SESSION_SECRET: process.env.SESSION_SECRET,
+	FRONTEND_ONE: process.env.FRONTEND_ONE as string,
+	FRONTEND_TWO: process.env.FRONTEND_TWO as string
 };

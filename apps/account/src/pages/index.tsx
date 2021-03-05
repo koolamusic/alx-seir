@@ -21,7 +21,7 @@ import { Header } from '../components/Header'
 import ResourceFactory from '../utils/adapter'
 import JokeCard from '../components/JokeCard';
 import { styleConstants } from '../theme';
-const baseURL = 'http://localhost:4000';
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 
 const defaultConfig = {

@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import ResourceFactory from '../utils/adapter'
 import { AxiosRequestConfig } from 'axios'
 
-const baseURL = 'http://localhost:4000';
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 
 const defaultConfig: AxiosRequestConfig = {
@@ -85,12 +85,12 @@ export default function Page(): JSX.Element {
 export async function getServerSideProps(ctx: NextPageContext) {
     // Parse
     const cookies = nookies.get(ctx)
-    // if (cookies["__app.sid"]) {
-    //     setCookie(null, '__app.sid', cookies["__app.sid"], {
-    //         maxAge: 30 * 24 * 60 * 60,
-    //         path: '/',
-    //     })
-    // }
+    if (cookies["__app.sid"]) {
+        nookies.set(null, '__app.sid', cookies["__app.sid"], {
+            maxAge: 30 * 24 * 60 * 60,
+            path: '/',
+        })
+    }
     // Set
     nookies.set(ctx, 'fromServerSideProps', "brookies", {
         maxAge: 30 * 24 * 60 * 60,

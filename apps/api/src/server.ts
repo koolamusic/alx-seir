@@ -19,7 +19,7 @@ server.use(
   cors({
     methods: ['GET', 'POST', 'PUT'],
     credentials: true,
-    origin: ["http://localhost:3000", "http://a6da30e8feb1.ngrok.io", "https://a6da30e8feb1.ngrok.io", "http://localhost:3200"],
+    origin: ["http://localhost:3000", secrets.FRONTEND_ONE, secrets.FRONTEND_TWO, "http://localhost:3200"],
   })
 );
 
@@ -38,7 +38,7 @@ const sessionMiddleware = session({
     httpOnly: false,
     signed: true,
     maxAge: 60000,
-    // domain: '*.alxseri.xyz, localhost'
+    domain: '*.alxseri.xyz, localhost, *.vercel.app'
   },
   secret: secrets.SESSION_SECRET as string,
   resave: false,

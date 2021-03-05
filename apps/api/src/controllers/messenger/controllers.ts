@@ -7,7 +7,7 @@ import logger from '../../core/logger'
 const jokesApiProxyOptions: Options = {
   target: secrets.JOKES_API,
   headers: {
-    'Access-Control-Allow-Origin': 'http://localhost:3000',
+    'Access-Control-Allow-Origin': secrets.FRONTEND_ONE,
   },
   changeOrigin: true, // needed for virtual hosted sites
   pathRewrite: {
