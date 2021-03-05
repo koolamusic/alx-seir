@@ -35,7 +35,7 @@ const sessionMiddleware = session({
   store: mongoStore,
   name: "__app.sid",
   cookie: {
-    httpOnly: false,
+    httpOnly: true,
     secure: 'auto',
     signed: true,
     maxAge: 60000,

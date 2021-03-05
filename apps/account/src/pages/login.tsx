@@ -37,6 +37,7 @@ export default function Page(): JSX.Element {
         if (result) {
             const cookies = parseCookies()
             console.log(cookies)
+            window.location.replace('/')
         }
         console.log(result)
     };
