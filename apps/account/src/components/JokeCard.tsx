@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, BoxProps, Text, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverHeader, PopoverArrow, Button, PopoverBody } from '@chakra-ui/react'
+import { Box, BoxProps, Text, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverHeader, Button, PopoverBody } from '@chakra-ui/react'
 import { TJokesCollectionProps, outerColorGen, layerColorGen } from '../utils/helpers';
 import { styleConstants } from '../theme';
 

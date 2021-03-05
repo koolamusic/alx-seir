@@ -5,7 +5,8 @@
     "fmt": "prettier --write '**/*.{js,ts}'",
     "install": "lerna run install",
     "build": "lerna run build",
-    "start": "cd apps/api && node dist/entry.js"
+    "static": "tsc --pretty --noEmit",
+    "start": "cd ./apps/api && node dist/entry.js"
 
   },
   "prettier": {

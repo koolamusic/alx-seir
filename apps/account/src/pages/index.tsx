@@ -4,20 +4,14 @@ import Head from 'next/head'
 import styled from '@emotion/styled'
 import { TMangaCollection, TJokesCollection } from '../utils/helpers'
 import {
-  Link as ChakraLink,
   SimpleGrid,
   Text,
   Box,
-  Code,
-  List,
-  ListIcon,
-  ListItem,
-  Grid,
   Spinner,
   Flex,
   Stack
 } from '@chakra-ui/react'
-import nookies, { parseCookies, setCookie } from 'nookies'
+import nookies from 'nookies'
 
 import { Wrapper } from '../components/Container'
 import { Main } from '../components/Main'

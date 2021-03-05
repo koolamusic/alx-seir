@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link'
 import { Box } from '@chakra-ui/react';
 import { NextPageContext } from 'next';
-import nookies, { parseCookies, setCookie } from 'nookies'
+import nookies, { parseCookies } from 'nookies'
 
 import { FormLayout, SubmitButton } from '../components/Layout'
 import { FormPageHeader } from '../components/Header'
