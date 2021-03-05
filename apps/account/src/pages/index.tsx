@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { NextPageContext } from 'next'
+import styled from '@emotion/styled'
 import { TMangaCollection, TJokesCollection } from '../utils/helpers'
 import {
   Link as ChakraLink,
@@ -15,7 +16,6 @@ import {
   Flex,
   Stack
 } from '@chakra-ui/react'
-import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
 import nookies, { parseCookies, setCookie } from 'nookies'
 
 import { Wrapper } from '../components/Container'
@@ -40,7 +40,37 @@ ResourceFactory.updateDefaults(defaultConfig)
 class Manga extends ResourceFactory.createResource("/v1/outbox/manga") { }
 class Jokes extends ResourceFactory.createResource("/v1/outbox/jokes/ten") { }
 
+const CardWrapper = styled(Flex)`
+background: white;
+width: 100%;
+overflow: scroll;
+flex-direction: column;
+  &::-webkit-scrollbar { 
+      width: 0;  /* Remove scrollbar space */
+    background: transparent;
+      }
+    &::-webkit-scrollbar-thumb {
+    background: #419e41;
+}
+            
+`
 
+
+
+const Loader = ({ entry }: { entry: string }) => (
+  <Flex>
+    <Spinner
+      thickness="10px"
+      speed="0.65s"
+      emptyColor="gray.200"
+      color="green.400"
+      size="md"
+    />
+    <Text ml={2}>
+      Loading your {entry}
+    </Text>
+  </Flex>
+)
 
 
 export default function Page(): JSX.Element {
@@ -49,8 +79,8 @@ export default function Page(): JSX.Element {
 
   const fetchResources = useCallback(async () => {
     try {
-      const manga = await Manga.list()
       const jokes = await Jokes.get('/ten')
+      const manga = await Manga.list()
 
       console.log(manga, jokes)
       /* Update state object */
@@ -73,7 +103,7 @@ export default function Page(): JSX.Element {
 
   if (!jokesCollection && !mangaCollection) {
     return (
-      <Spinner size="xl" />
+      <Loader entry={"Loading ..."} />
     )
   }
 
@@ -86,7 +116,6 @@ export default function Page(): JSX.Element {
         {/* =================>  The Jokes Section */}
         <Main>
           <Box my={4} mt={8} pt={6}>
-
             <Text
               bgGradient="linear(to-l, #7928CA,#FF0080)"
               bgClip="text"
@@ -100,13 +129,16 @@ export default function Page(): JSX.Element {
 
             {/* ------------ Render the Jokes Collection ---------------- */}
             <SimpleGrid columns={[1, 2, 3, 4]} spacing={10} pb={8}>
-              {jokesCollection.map((value, idx) => {
-                return (
-                  <Box key={[idx, value.id].join("__")}>
-                    <JokeCard jokes={value} />
-                  </Box>
-                )
-              })}
+              {jokesCollection.length === 0
+                ? <Loader entry={"personalized jokes"} />
+                : jokesCollection.map((value, idx) => {
+                  return (
+                    <Box key={[idx, value.id].join("__")}>
+                      <JokeCard jokes={value} />
+                    </Box>
+                  )
+                })
+              }
             </SimpleGrid>
             {/* ------------ Render the Jokes Collection ---------------- */}
           </Box>
@@ -115,32 +147,32 @@ export default function Page(): JSX.Element {
 
 
 
-
-        <Box width="100%" borderTop={styleConstants.altBorder} background="white">
-
-          <Main>
-
+        {/* =========> Section to render Anime Collection */}
+        <Flex direction="column" width="100%" borderTop={styleConstants.altBorder} background="white">
+          <Main pb={1}>
             <Box>
-
-
-
               <Text
                 bgGradient="linear(to-l, #be3759, #108645)"
                 bgClip="text"
                 fontSize={["3xl", "5xl"]}
                 fontWeight="bold"
-                my={[3, 6]}
-                py={[2, 4]}
+                my={[1, 3]}
+                py={[1, 3]}
               >
                 Explore Mangas
             </Text>
+            </Box>
+          </Main>
+        </Flex>
 
-
-
-              {/* -------------- Render the Manga Anime Collections here ---------------- */}
-              <Stack isInline wrap="wrap" >
-                {/* <SimpleGrid columns={[1, 2, 3, 4]} spacing={4}> */}
-                {mangaCollection.map((value, idx) => {
+        <CardWrapper>
+          <Main pb={12}>
+            {/* -------------- Render the Manga Anime Collections here ---------------- */}
+            <Stack isInline >
+              {/* <SimpleGrid columns={[1, 2, 3, 4]} spacing={4}> */}
+              {mangaCollection.length === 0
+                ? <Loader entry={"Anime Collection"} />
+                : mangaCollection.map((value, idx) => {
                   const { attributes } = value
                   return (
                     <Box key={[idx, value.id].join("__")}>
@@ -149,13 +181,18 @@ export default function Page(): JSX.Element {
                     </Box>
                   )
                 })}
-              </Stack>
-              {/* </SimpleGrid> */}
-              {/* -------------- Render the Manga Anime Collections here ---------------- */}
-            </Box>
+            </Stack>
+            {/* </SimpleGrid> */}
+            {/* -------------- Render the Manga Anime Collections here ---------------- */}
+
 
           </Main>
-        </Box>
+        </CardWrapper>
+        {/* =========> Section to render Anime Collection */}
+        {/* 
+        <Flex w="100%" background="white">
+          <Main pb={12} />
+        </Flex> */}
 
       </Wrapper>
     </>

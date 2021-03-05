@@ -10,8 +10,6 @@ interface MangaCardProps extends Partial<BoxProps> {
 
 const MangaCard = ({ mr, width, detail }: MangaCardProps) => {
     const { isOpen, onToggle } = useDisclosure()
-    console.log("THESE ARE DETAILS", detail)
-
 
     return (
         <Box
