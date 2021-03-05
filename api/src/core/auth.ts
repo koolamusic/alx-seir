@@ -4,43 +4,42 @@
  * 2. Add Serializer for Authentication
  * 3. Add Deserializer for Sessions and protected routes
  */
+import passport from 'passport';
 import { Request, Response, NextFunction } from 'express'
-import { Strategy, VerifyFunction, IStrategyOptions } from 'passport-local'
-import { IUser } from '../shared/user.interface';
-// import { getCurrentUser } from './../application/auth';
+import { Strategy, IStrategyOptionsWithRequest, VerifyFunctionWithRequest } from 'passport-local'
+import { LoginUserInputDTO } from '../shared/user.interface';
+import AuthApplication from './../application/auth';
 import HttpError from './errors'
+import logger from './logger'
 
 
 /* Passport local strategy options */
-const strategyOptions: IStrategyOptions = {
+const strategyOptions: IStrategyOptionsWithRequest = {
     usernameField: 'email',
     passwordField: 'password',
+    passReqToCallback: true,
     session: true
 }
 
-const mockPayload = {
-    name: "Amaloar",
-    email: 'rubik@mail.com',
-    username: 'rubik@mail.com',
-    password: "123456"
-}
+// const mockPayload = {
+//     name: "Amaloar",
+//     email: 'rubik@mail.com',
+//     username: 'rubik@mail.com',
+//     password: "123456"
+// }
 
-const verifyUser: VerifyFunction = async (_username, _password, done) => {
-    console.log("GOT FIRED")
-    return done(null, mockPayload)
-
-    // try {
-    //     if (username && password) {
-    //         const user = await getCurrentUser({ email: username })
-    //         if (!user) {
-    //             throw new HttpError(401);
-    //         }
-    //         return done(null, user)
-    //     }
-    // } catch (error) {
-    //     done(error)
-    //     throw new HttpError(401);
-    // }
+const verifyUser: VerifyFunctionWithRequest = async (_req, username, password, done) => {
+    try {
+        if (username && password) {
+            const user = await new AuthApplication().validateUser({ email: username, password })
+            if (!user) {
+                throw new HttpError(401);
+            }
+            return done(null, user)
+        }
+    } catch (error) {
+        done(error)
+    }
 
 }
 
@@ -50,7 +49,7 @@ export const localStrategy = new Strategy(strategyOptions, verifyUser)
 /* Middleware to check if user is authenticated in routes */
 export const isAuthenticated = (req: Request, _res: Response, next: NextFunction) => {
     try {
-        console.log(req.isAuthenticated(), req.isUnauthenticated())
+        console.log("is authenticated is =", req.isAuthenticated(), req.isUnauthenticated())
         if (!req.isAuthenticated()) {
             throw new HttpError(401, "You are not authenticated")
         }
@@ -67,35 +66,61 @@ export const userSerializer = async (user: Express.User, done: (err: null, tid: 
     done(null, user);
 }
 
-export const userDeserializer = async (user: IUser, done: (err: any, tid: any) => void) => {
+/* Tell passport how to deserialize the user */
+export const userDeserializer = async (user: LoginUserInputDTO, done: (err: any, tid: any) => void) => {
     try {
         console.log(user)
         if (user && user.email) {
-            // const profile = await getCurrentUser({ email: user.email })
-            let profile = mockPayload
+            const profile = await AuthApplication.getCurrentUser({ email: user.email })
 
             console.log('the profile we got from deserialization', profile)
             done(null, profile)
         }
 
     } catch (error) {
-        done(error, false)
-
+        done(error, null)
     }
 
 }
 
+/**
+ * @function authHandler - Manage the user authentication logic
+ * @param passportHandler - The passport instance object
+ * @param cb = callback function
+ */
 
-//   authservice.getUser***
-//     User.findById(id, function(err, user) {
-//       done(err, user);
-//     });
-//   });
+export const authHandler = (passportHandler: passport.PassportStatic) => (req: Request, res: Response, next: NextFunction) => {
+    console.log("In Authentication Handler",)
+    const passportCallback = (err: any, user: Request, info: any) => {
+        console.log("IN PASSPORT AUTHENTICATE CALLBACK", user)
+        try {
 
-// passport.serializeUser((user: { id: any; }, done: (arg0: null, arg1: any) => void) => {
-//     console.log('Inside serializeUser callback. User id is save to the session file store here')
-//     done(null, user.id);
-// });
+            if (err) {
+                throw new HttpError(409, `${err}`)
+            }
+
+            if (!user) {
+                throw new HttpError(409, `login credentials: ${info}`)
+            }
+
+            req.login(user, function (err) {
+                if (err) {
+                    logger.error(`[strategy:authHandler] ${err}`)
+                    throw new HttpError(401, err)
+
+                }
+                return res.redirect('/_healthcheck');
+            });
+
+        } catch (err) {
+            logger.error(`[strategy:authHandler] ${err}`)
+            throw new HttpError(409, `${err}`)
+
+        }
+    }
+
+    passportHandler.authenticate('local', passportCallback)(req, res, next)
+}
 
 
 
