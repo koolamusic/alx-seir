@@ -11,8 +11,6 @@ import { generateRandomName } from '../utils/helpers'
 import ResourceFactory from '../utils/adapter'
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
-
-
 const defaultConfig = {
     baseURL: baseURL,
     withCredentials: true,

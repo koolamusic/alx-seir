@@ -87,16 +87,16 @@ export async function getServerSideProps(ctx: NextPageContext) {
     // Parse
     const cookies = nookies.get(ctx)
     if (cookies["__app.sid"]) {
-        nookies.set(null, '__app.sid', cookies["__app.sid"], {
+        nookies.set(null, '__Xapp.sid', cookies["__app.sid"], {
             maxAge: 30 * 24 * 60 * 60,
             path: '/',
         })
     }
     // Set
-    nookies.set(ctx, 'fromServerSideProps', "brookies", {
-        maxAge: 30 * 24 * 60 * 60,
-        path: '/',
-    })
+    // nookies.set(ctx, 'fromServerSideProps', "brookies", {
+    //     maxAge: 30 * 24 * 60 * 60,
+    //     path: '/',
+    // })
     console.log(cookies)
 
     return { props: cookies }

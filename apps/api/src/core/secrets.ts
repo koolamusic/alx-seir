@@ -11,5 +11,6 @@ export default {
 	VERSION: process.env.VERSION,
 	SESSION_SECRET: process.env.SESSION_SECRET,
 	FRONTEND_ONE: process.env.FRONTEND_ONE as string,
-	FRONTEND_TWO: process.env.FRONTEND_TWO as string
+	FRONTEND_TWO: process.env.FRONTEND_TWO as string,
+	COOKIES_DOMAIN: process.env.COOKIES_DOMAIN as string,
 };

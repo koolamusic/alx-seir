@@ -21,9 +21,9 @@ import { Header } from '../components/Header'
 import ResourceFactory from '../utils/adapter'
 import JokeCard from '../components/JokeCard';
 import { styleConstants } from '../theme';
+
+
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
-
-
 const defaultConfig = {
   baseURL: baseURL,
   withCredentials: true,
@@ -199,13 +199,7 @@ export default function Page(): JSX.Element {
 }
 
 
-const complex =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) Ap…ML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
-
-
 Page.getInitialProps = async (ctx: NextPageContext) => {
-  nookies.set(ctx, 'one', complex, {})
-  nookies.set(ctx, 'three', "hey! this one's simple :)", {})
 
   console.log(nookies.get(ctx))
   return {

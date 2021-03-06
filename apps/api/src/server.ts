@@ -40,7 +40,7 @@ const sessionMiddleware = session({
     signed: true,
     sameSite: 'lax',
     maxAge: 60000,
-    domain: secrets.IS_PROD ? 'alxseri.xyz' : 'localhost'
+    domain: secrets.IS_PROD ? secrets.COOKIES_DOMAIN : 'localhost'
   },
   proxy: true,
   secret: secrets.SESSION_SECRET as string,
