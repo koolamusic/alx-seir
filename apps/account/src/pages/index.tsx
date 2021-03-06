@@ -26,6 +26,7 @@ const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const defaultConfig = {
   baseURL: baseURL,
+  withCredentials: true,
   headers: {
     'X-Request-With': 'XMLHttpRequest'
   }
