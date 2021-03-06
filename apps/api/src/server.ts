@@ -39,7 +39,7 @@ const sessionMiddleware = session({
     secure: 'auto',
     signed: true,
     sameSite: 'lax',
-    maxAge: 60000,
+    maxAge: 86400000, // 24hours
     domain: secrets.IS_PROD ? secrets.COOKIES_DOMAIN : 'localhost'
   },
   proxy: true,
