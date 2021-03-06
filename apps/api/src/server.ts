@@ -39,9 +39,9 @@ const sessionMiddleware = session({
     secure: 'auto',
     signed: true,
     maxAge: 60000,
-    domain: secrets.IS_PROD ? '*.alxseri.xyz' : 'localhost:3000'
-    // domain: '*.alxseri.xyz, localhost, *.vercel.app'
+    domain: secrets.IS_PROD ? 'app.alxseri.xyz' : 'localhost'
   },
+  proxy: true,
   secret: secrets.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
