@@ -27,7 +27,7 @@
 		]
 	},
 	"dependencies": {
-		"@typegoose/typegoose": "^7.4.8",
+		"@typegoose/typegoose": "^7.4.2",
 		"@types/bcrypt": "^3.0.0",
 		"@types/express-session": "^1.17.3",
 		"@types/nanoid": "^2.1.0",
@@ -43,6 +43,7 @@
 		"lodash": "^4.17.20",
 		"mongoose": "^5.10.18",
 		"nanoid": "^3.1.20",
+		"node-fetch": "^2.6.1",
 		"on-headers": "^1.0.2",
 		"passport": "^0.4.1",
 		"passport-local": "^1.0.0",
@@ -57,6 +58,7 @@
 		"@types/lodash": "^4.14.161",
 		"@types/mongoose": "^5.10.3",
 		"@types/node": "^14.11.8",
+		"@types/node-fetch": "^2.5.8",
 		"@types/passport": "^1.0.6",
 		"@types/passport-local": "^1.0.33",
 		"@types/supertest": "2.0.10",
