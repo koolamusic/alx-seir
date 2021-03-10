@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link'
 import { Box } from '@chakra-ui/react';
 import { NextPageContext } from 'next';
-import nookies, { parseCookies } from 'nookies'
+import nookies from 'nookies'
 
 import { FormLayout, SubmitButton } from '../components/Layout'
 import { FormPageHeader } from '../components/Header'
@@ -93,8 +93,6 @@ export async function getServerSideProps(ctx: NextPageContext) {
     if (Auth.redirectIfAuthenticated(ctx, '/')) {
         return {};
     }
-
-    console.log(cookies)
 
     return {
         props: cookies
