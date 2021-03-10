@@ -33,21 +33,20 @@ export const FormLayout = (props: IPageLayout): JSX.Element => {
                 padding={props.wrapperBox || styleConstants.paddingWrapper}
                 width="100%"
                 alignItems="flex-start"
-                minHeight="100vh"
                 height="100%"
             >
                 {/* === section to render the form ==== */}
                 <Main
-                    width="30rem"
-                    bg={'white'}
+                    width={["100%", "30rem"]}
+                    bg={['inherit', 'white']}
                     margin={'auto'}
                     my="10"
-                    px={10}
+                    px={[2, 10]}
                     py={8}
                     alignItems="center"
-                    border={styleConstants.defaultBorder}
+                    border={["none", styleConstants.defaultBorder]}
                     justifyContent="center"
-                    boxShadow={styleConstants.lightShadow}
+                    boxShadow={["none", styleConstants.lightShadow]}
                     borderRadius={styleConstants.defaultRadius}
                 >
                     {props.children}

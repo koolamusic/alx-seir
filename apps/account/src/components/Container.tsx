@@ -27,6 +27,7 @@ export const Wrapper: React.FC<FlexProps> = (props): JSX.Element => {
       alignItems="center"
       direction="column"
       width="100%"
+      minH="100vh"
       justifyContent="flex-start"
       bg={bgColor[colorMode]}
       color={color[colorMode]}

@@ -38,14 +38,12 @@ class ResourceFactory extends Object {
                 let config = { method, url };
                 let key = method.toLowerCase() == 'get' ? 'params' : 'data';
                 config[key] = data;
-                // config['headers'] = Auth.getAuthHeaders();
                 return Auth.getAuthHeaders(ctx).then(headers => {
                     const updatedHeaders = Object.assign(
                         {},
                         headers,
                         this.config.headers
                     );
-                    console.log({ updatedHeaders, headers, config });
                     config['headers'] = updatedHeaders;
                     return this.axios.request(config);
                 });

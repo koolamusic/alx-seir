@@ -31,7 +31,7 @@ export default function JokeCard({ jokes, ...props }: JokeCardProps) {
 
         >
             <Box {...props}>
-                <Text as="h1" fontSize="1.4rem">{jokes.setup}</Text>
+                <Text as="h1" fontSize="1.25rem">{jokes.setup}</Text>
 
 
 

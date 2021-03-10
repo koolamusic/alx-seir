@@ -2,13 +2,14 @@ import React from 'react';
 import Link from 'next/link'
 import { Box } from '@chakra-ui/react';
 import { NextPageContext } from 'next';
-import nookies, { parseCookies } from 'nookies'
+import nookies from 'nookies'
 
 import { FormLayout, SubmitButton } from '../components/Layout'
 import { FormPageHeader } from '../components/Header'
 import { InputField, PasswordField } from '../components/Fields';
 import { useForm } from 'react-hook-form';
 import ResourceFactory from '../utils/adapter'
+import * as Auth from '../utils/auth'
 import { AxiosRequestConfig } from 'axios'
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
@@ -32,14 +33,17 @@ export default function Page(): JSX.Element {
 
 
     const onSubmit = async (data: any): Promise<void> => {
-        console.log(data)
-        const result = await Login.save(data)
-        if (result) {
-            const cookies = parseCookies()
-            console.log(cookies)
-            window.location.replace('/')
+        try {
+            const result = await Login.save(data)
+            // console.log(result.data)
+            if (result) {
+                Auth.loginUser('/', result.data.profile)
+            }
+
+        } catch (error) {
+            alert(error)
+
         }
-        console.log(result)
     };
 
     return (
@@ -86,18 +90,11 @@ export default function Page(): JSX.Element {
 export async function getServerSideProps(ctx: NextPageContext) {
     // Parse
     const cookies = nookies.get(ctx)
-    if (cookies["__app.sid"]) {
-        nookies.set(null, '__Xapp.sid', cookies["__app.sid"], {
-            maxAge: 30 * 24 * 60 * 60,
-            path: '/',
-        })
+    if (Auth.redirectIfAuthenticated(ctx, '/')) {
+        return {};
     }
-    // Set
-    // nookies.set(ctx, 'fromServerSideProps', "brookies", {
-    //     maxAge: 30 * 24 * 60 * 60,
-    //     path: '/',
-    // })
-    console.log(cookies)
 
-    return { props: cookies }
+    return {
+        props: cookies
+    }
 }

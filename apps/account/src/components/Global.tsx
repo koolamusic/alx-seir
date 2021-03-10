@@ -7,6 +7,7 @@ const Fonts = () => (
         html,body {
           -webkit-overflow-scrolling: touch;
           scroll-behavior: smooth;
+          background: #F7FAFC;
         }
         #nprogress {
           pointer-events: none;
