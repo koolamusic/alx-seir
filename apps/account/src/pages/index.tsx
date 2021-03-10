@@ -39,18 +39,26 @@ class Jokes extends ResourceFactory.createResource("/v1/outbox/jokes/ten") { }
 const CardWrapper = styled(Flex)`
 background: white;
 width: 100%;
-overflow: scroll;
+overflow-x: scroll;
 flex-direction: column;
   &::-webkit-scrollbar { 
       width: 0;  /* Remove scrollbar space */
-    background: transparent;
+      background: transparent;
+      height: .50rem;
       }
     &::-webkit-scrollbar-thumb {
-    background: #419e41;
+    background: #2a422a;
 }
             
 `
+const JokeWrapper = styled(SimpleGrid)`
 
+@media (max-width: 480px) { 
+    grid-template-columns: none;
+    justify-content: center;
+  }
+
+`
 
 
 const Loader = ({ entry }: { entry: string }) => (
@@ -120,6 +128,7 @@ export default function Page(): JSX.Element {
               bgClip="text"
               fontSize={["3xl", "5xl"]}
               fontWeight="bold"
+              textAlign={["center", "left"]}
               my={[3, 6]}
               py={[2, 4]}
             >
@@ -127,7 +136,7 @@ export default function Page(): JSX.Element {
             </Text>
 
             {/* ------------ Render the Jokes Collection ---------------- */}
-            <SimpleGrid columns={[1, 2, 3, 4]} spacing={10} pb={8}>
+            <JokeWrapper columns={[1, 2, 3, 4]} spacing={10} pb={8}>
               {jokesCollection.length === 0
                 ? <Loader entry={"personalized jokes"} />
                 : jokesCollection.map((value, idx) => {
@@ -138,7 +147,7 @@ export default function Page(): JSX.Element {
                   )
                 })
               }
-            </SimpleGrid>
+            </JokeWrapper>
             {/* ------------ Render the Jokes Collection ---------------- */}
           </Box>
         </Main>
