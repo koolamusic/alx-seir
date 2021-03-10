@@ -4,6 +4,10 @@ const Fonts = () => (
   <Global
     styles={`
         /* -----------Make clicks pass-through----------- */
+        html,body {
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
+        }
         #nprogress {
           pointer-events: none;
         }
