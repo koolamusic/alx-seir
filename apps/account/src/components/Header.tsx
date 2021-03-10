@@ -24,7 +24,9 @@ export const HeaderElement: React.FC<{ name: string }> = ({ name }) => {
     return (
         <>
             <Link href="/">
-                <Heading as="h1"
+                <Heading
+                    as="h1"
+                    cursor="pointer"
                     bgGradient="linear(to-l, #07522c,#FF0080)"
                     bgClip="text"
                     letterSpacing="0.2rem" fontFamily="Dosis" size="sm">ALXSERI</Heading>
