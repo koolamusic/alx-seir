@@ -1,80 +1,21 @@
 import React, { useCallback } from 'react';
-import { NextPageContext } from 'next'
 import Head from 'next/head'
-import styled from '@emotion/styled'
-import { TMangaCollection, TJokesCollection } from '../utils/helpers'
-import {
-  SimpleGrid,
-  Text,
-  Box,
-  Spinner,
-  Flex,
-  Stack
-} from '@chakra-ui/react'
+import { NextPageContext } from 'next'
+import { Text, Box, Flex, Stack } from '@chakra-ui/react'
 
-import { Wrapper } from '../components/Container'
-import { Main } from '../components/Main'
 import MangaCard from '../components/MangaCard'
+import JokeCard from '../components/JokeCard';
+import { TMangaCollection, TJokesCollection } from '../utils/helpers'
+import { JokeAPI, MangaAPI } from '../utils/api'
+import * as Auth from '../utils/auth'
+
+import { Wrapper, CardWrapper, JokeWrapper } from '../components/Container'
+import { Main, Loader } from '../components/Main'
 import { Header } from '../components/Header'
 
-import ResourceFactory from '../utils/adapter'
-import * as Auth from '../utils/auth'
-import JokeCard from '../components/JokeCard';
 import { styleConstants } from '../theme';
 
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
-const defaultConfig = {
-  baseURL: baseURL,
-  withCredentials: true,
-  headers: {
-    'X-Request-With': 'XMLHttpRequest'
-  }
-};
-
-ResourceFactory.updateDefaults(defaultConfig)
-class Manga extends ResourceFactory.createResource("/v1/outbox/manga") { }
-class Jokes extends ResourceFactory.createResource("/v1/outbox/jokes/ten") { }
-
-const CardWrapper = styled(Flex)`
-background: white;
-width: 100%;
-overflow-x: scroll;
-flex-direction: column;
-  &::-webkit-scrollbar { 
-      width: 0;  /* Remove scrollbar space */
-      background: transparent;
-      height: .50rem;
-      }
-    &::-webkit-scrollbar-thumb {
-    background: #2a422a;
-}
-            
-`
-const JokeWrapper = styled(SimpleGrid)`
-
-@media (max-width: 630px) { 
-    grid-template-columns: none;
-    justify-content: center;
-  }
-
-`
-
-
-const Loader = ({ entry }: { entry: string }) => (
-  <Flex>
-    <Spinner
-      thickness="10px"
-      speed="0.65s"
-      emptyColor="gray.200"
-      color="green.400"
-      size="md"
-    />
-    <Text ml={2}>
-      Loading your {entry}
-    </Text>
-  </Flex>
-)
 
 
 export default function Page(): JSX.Element {
@@ -83,8 +24,8 @@ export default function Page(): JSX.Element {
 
   const fetchResources = useCallback(async () => {
     try {
-      const jokes = await Jokes.get('/ten')
-      const manga = await Manga.list()
+      const jokes = await JokeAPI.get('/ten')
+      const manga = await MangaAPI.list()
 
       // console.log(manga, jokes)
       /* Update state object */
@@ -93,7 +34,7 @@ export default function Page(): JSX.Element {
 
 
     } catch (error) {
-      // alert(error)
+      alert(error)
     }
   }, [],
   )

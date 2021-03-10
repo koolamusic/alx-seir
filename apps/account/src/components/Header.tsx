@@ -1,8 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { Box, Avatar, Heading, Flex, Divider, Badge, Text, AvatarBadge, Stack } from '@chakra-ui/react';
+import { Box, Avatar, Heading, Flex, Tooltip, Divider, Badge, Text, AvatarBadge, Stack } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { styleConstants } from '../theme';
+import nookies from 'nookies'
+import { decode } from 'js-base64'
 
 const HeaderBox = styled(Box)`
     background-color: ${styleConstants.background};
@@ -20,7 +22,22 @@ const HeaderDefault = styled(HeaderBox)`
     border-bottom: 1px solid #dddddd;
 `;
 
-export const HeaderElement: React.FC<{ name: string }> = ({ name }) => {
+export const HeaderElement: React.FC = () => {
+    const [profile, setProfile] = React.useState<string>('')
+    const [hasProfile, setHasProfile] = React.useState<boolean>(false)
+
+    React.useEffect(() => {
+        const cookies = nookies.get(null)
+        const profile = cookies["__app.user"]
+        if (profile) {
+            setProfile(decode(profile))
+            setHasProfile(true)
+        }
+
+    }, []);
+
+    console.log(profile)
+
     return (
         <>
             <Link href="/">
@@ -32,21 +49,25 @@ export const HeaderElement: React.FC<{ name: string }> = ({ name }) => {
                     letterSpacing="0.2rem" fontFamily="Dosis" size="sm">ALXSERI</Heading>
             </Link>
 
-            <Stack isInline alignItems="center" justifyContent="flex-end" width="130px">
-                <Avatar cursor="pointer" name={name} size="sm">
-                    <AvatarBadge size="1rem" bg="green.500" />
-                </Avatar>
+            {hasProfile &&
+                <Stack isInline alignItems="center" justifyContent="flex-end" width="130px">
+                    <Tooltip bg="green.600" hasArrow label={profile} placement="bottom">
+                        <Avatar cursor="pointer" name={profile} size="sm">
+                            <AvatarBadge p={1} bg="green.500" />
+                        </Avatar>
+                    </Tooltip>
 
-                <Link href="/logout">
-                    <Badge
-                        _hover={{
-                            opacity: '0.7'
-                        }}
-                        cursor="pointer"
-                        fontSize=".85rem"
-                        colorScheme="red">Logout</Badge>
-                </Link>
-            </Stack>
+                    <Link href="/logout">
+                        <Badge
+                            _hover={{
+                                opacity: '0.7'
+                            }}
+                            cursor="pointer"
+                            fontSize=".85rem"
+                            colorScheme="red">Logout</Badge>
+                    </Link>
+                </Stack>
+            }
         </>
     );
 };
@@ -55,6 +76,7 @@ export const Header: React.FC<{ isDefault?: boolean; isBordered?: boolean }> = (
     isDefault,
     isBordered,
 }): JSX.Element => {
+
     return (
         <header>
             {isDefault ? (

@@ -14,14 +14,16 @@ const defaultConfig: AxiosRequestConfig = {
 };
 
 ResourceFactory.updateDefaults(defaultConfig)
-class SignOut extends ResourceFactory.createResource("/v1/auth/logout") { }
+class SignOut extends ResourceFactory.createResource("/logout") { }
 
 
 export default function Logout() {
 
     useEffect(() => {
         (async function () {
-            await SignOut.get()
+            await SignOut.get().then((res) => {
+                console.log(res)
+            })
         })()
     }, []);
 
@@ -39,7 +41,7 @@ export default function Logout() {
 // export async function getServerSideProps(ctx: NextPageContext) {
 Logout.getInitialProps = async (ctx: NextPageContext) => {
 
-    Auth.logoutUser(ctx, '/');
+    Auth.logoutUser(ctx);
     return {
         // props: {
         //     data: "empty"

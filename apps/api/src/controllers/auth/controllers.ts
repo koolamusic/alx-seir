@@ -51,12 +51,13 @@ export class LoginController extends BaseController {
                         throw new HttpError(401, err)
                     }
                     const userProfile = {
-                        _id: JSON.stringify(res.cookie),
-                        profile: encode(JSON.stringify({
-                            _id: user._id,
-                            email: user.email,
-                            name: user.name,
-                        }))
+                        _id: user._id,
+                        // profile: encode(JSON.stringify({
+                        //     _id: user._id,
+                        //     email: user.email,
+                        //     name: user.name,
+                        // }))
+                        profile: encode(user.name),
                     };
 
 
@@ -67,7 +68,7 @@ export class LoginController extends BaseController {
 
 
 
-                    console.log(userProfile, res.get('user'))
+                    // console.log(userProfile, res.get('user'))
                     this.success<LoginUserDTO>(res, userProfile)
                 });
 

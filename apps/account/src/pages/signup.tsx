@@ -8,21 +8,8 @@ import { FormLayout, SubmitButton } from '../components/Layout'
 import { FormPageHeader } from '../components/Header'
 import { InputField, PasswordField } from '../components/Fields';
 import { generateRandomName } from '../utils/helpers'
-import ResourceFactory from '../utils/adapter'
-
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
-const defaultConfig = {
-    baseURL: baseURL,
-    withCredentials: true,
-    headers: {
-        'X-Request-With': 'XMLHttpRequest'
-    }
-};
-
-ResourceFactory.updateDefaults(defaultConfig)
-
-class Signup extends ResourceFactory.createResource("/v1/auth/signup") { }
-class Login extends ResourceFactory.createResource("/v1/auth/login") { }
+import { LoginAPI, SignupAPI } from '../utils/api'
+import * as Auth from '../utils/auth'
 
 
 export default function Page(): JSX.Element {
@@ -38,13 +25,13 @@ export default function Page(): JSX.Element {
 
     const onSubmit = async (data: any): Promise<void> => {
         try {
-            const result = await Signup.save(data)
+            const result = await SignupAPI.save(data)
+
             if (result) {
-                Login.save(data).then(() => {
-                    window.location.replace('/')
-
-                })
-
+                await LoginAPI.save(data)
+                    .then((res) => {
+                        Auth.loginUser('/', res.data.profile)
+                    })
             }
 
         } catch (error) {
