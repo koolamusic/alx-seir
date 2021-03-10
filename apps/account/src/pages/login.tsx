@@ -87,7 +87,9 @@ export default function Page(): JSX.Element {
 }
 
 
-export async function getServerSideProps(ctx: NextPageContext) {
+// export async function getServerSideProps(ctx: NextPageContext) {
+Page.getInitialProps = async (ctx: NextPageContext) => {
+
     // Parse
     const cookies = nookies.get(ctx)
     if (Auth.redirectIfAuthenticated(ctx, '/')) {
