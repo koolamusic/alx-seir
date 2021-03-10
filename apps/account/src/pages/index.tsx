@@ -11,7 +11,6 @@ import {
   Flex,
   Stack
 } from '@chakra-ui/react'
-import nookies from 'nookies'
 
 import { Wrapper } from '../components/Container'
 import { Main } from '../components/Main'
@@ -19,6 +18,7 @@ import MangaCard from '../components/MangaCard'
 import { Header } from '../components/Header'
 
 import ResourceFactory from '../utils/adapter'
+import * as Auth from '../utils/auth'
 import JokeCard from '../components/JokeCard';
 import { styleConstants } from '../theme';
 
@@ -53,7 +53,7 @@ flex-direction: column;
 `
 const JokeWrapper = styled(SimpleGrid)`
 
-@media (max-width: 480px) { 
+@media (max-width: 630px) { 
     grid-template-columns: none;
     justify-content: center;
   }
@@ -86,14 +86,14 @@ export default function Page(): JSX.Element {
       const jokes = await Jokes.get('/ten')
       const manga = await Manga.list()
 
-      console.log(manga, jokes)
+      // console.log(manga, jokes)
       /* Update state object */
       manga && await setMangaCollection(manga.data.data)
       jokes && await setJokesCollection(jokes.data)
 
 
     } catch (error) {
-      alert(error)
+      // alert(error)
     }
   }, [],
   )
@@ -210,8 +210,11 @@ export default function Page(): JSX.Element {
 
 Page.getInitialProps = async (ctx: NextPageContext) => {
 
-  console.log(nookies.get(ctx))
+  if (Auth.redirectIfNotAuthenticated(ctx, '/login')) {
+    return {};
+  }
+
   return {
-    server: nookies.get(ctx),
+    props: null
   }
 }

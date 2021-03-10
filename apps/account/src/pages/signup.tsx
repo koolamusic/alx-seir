@@ -22,6 +22,7 @@ const defaultConfig = {
 ResourceFactory.updateDefaults(defaultConfig)
 
 class Signup extends ResourceFactory.createResource("/v1/auth/signup") { }
+class Login extends ResourceFactory.createResource("/v1/auth/login") { }
 
 
 export default function Page(): JSX.Element {
@@ -36,9 +37,19 @@ export default function Page(): JSX.Element {
     }, []);
 
     const onSubmit = async (data: any): Promise<void> => {
-        console.log(data, randomName)
-        const result = await Signup.save(data)
-        console.log(result)
+        try {
+            const result = await Signup.save(data)
+            if (result) {
+                Login.save(data).then(() => {
+                    window.location.replace('/')
+
+                })
+
+            }
+
+        } catch (error) {
+
+        }
 
     };
 

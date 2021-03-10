@@ -1,15 +1,22 @@
-import { useEffect } from 'react'
+import { NextPageContext } from 'next';
+import * as Auth from '../utils/auth'
 
 export default function Logout() {
-
-    useEffect(() => {
-        setTimeout(() => {
-            process.browser && window.location.replace("/login")
-        }, 2000);
-    }, [])
     return (
         <section>
             Keep Calm while we log you out
         </section>
     )
 }
+
+
+
+
+
+export async function getServerSideProps(ctx: NextPageContext) {
+    Auth.logoutUser(ctx, '/');
+    return {
+        props: null
+    }
+};
+
