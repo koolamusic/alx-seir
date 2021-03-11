@@ -23,6 +23,7 @@ export default function Page(): JSX.Element {
   const [jokesCollection, setJokesCollection] = React.useState<TJokesCollection>([])
 
   const fetchResources = useCallback(async () => {
+
     try {
       const jokes = await JokeAPI.get('/ten')
       const manga = await MangaAPI.list()
@@ -138,10 +139,6 @@ export default function Page(): JSX.Element {
           </Main>
         </CardWrapper>
         {/* =========> Section to render Anime Collection */}
-        {/* 
-        <Flex w="100%" background="white">
-          <Main pb={12} />
-        </Flex> */}
 
       </Wrapper>
     </>
@@ -152,10 +149,12 @@ export default function Page(): JSX.Element {
 Page.getInitialProps = async (ctx: NextPageContext) => {
 
   if (Auth.redirectIfNotAuthenticated(ctx, '/login')) {
-    return {};
+    return { props: {} };
   }
 
   return {
-    props: null
+    props: {
+
+    }
   }
 }

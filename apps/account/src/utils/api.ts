@@ -18,8 +18,7 @@ export class MangaAPI extends ResourceFactory.createResource("/v1/outbox/manga")
 export class JokeAPI extends ResourceFactory.createResource("/v1/outbox/jokes/ten") { }
 export class LoginAPI extends ResourceFactory.createResource("/v1/auth/login") { }
 export class SignupAPI extends ResourceFactory.createResource("/v1/auth/signup") { }
-
-
+export class LogoutAPI extends ResourceFactory.createResource("/logout") { }
 
 
 

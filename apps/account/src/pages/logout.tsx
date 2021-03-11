@@ -1,32 +1,10 @@
-import { useEffect } from 'react'
 import { NextPageContext } from 'next';
+import axios from 'axios'
 import * as Auth from '../utils/auth'
-import { AxiosRequestConfig } from 'axios'
-import ResourceFactory from '../utils/adapter'
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
-const defaultConfig: AxiosRequestConfig = {
-    baseURL: baseURL,
-    withCredentials: true,
-    headers: {
-        'X-Request-With': 'XMLHttpRequest',
-    }
-};
-
-ResourceFactory.updateDefaults(defaultConfig)
-class SignOut extends ResourceFactory.createResource("/logout") { }
 
 
 export default function Logout() {
-
-    useEffect(() => {
-        (async function () {
-            await SignOut.get().then((res) => {
-                console.log(res)
-            })
-        })()
-    }, []);
-
     return (
         <section>
             Keep Calm while we log you out
@@ -40,12 +18,12 @@ export default function Logout() {
 
 // export async function getServerSideProps(ctx: NextPageContext) {
 Logout.getInitialProps = async (ctx: NextPageContext) => {
+    const logoutOnServer = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logout`)
+    console.log(logoutOnServer.data)
 
-    Auth.logoutUser(ctx);
-    return {
-        // props: {
-        //     data: "empty"
-        // }
+    if (logoutOnServer.data.success == true) {
+        await Auth.logoutUser(ctx, '/login')
     }
-};
 
+    return {}
+};

@@ -73,10 +73,10 @@ server.use('/_healthcheck', (_req: Request, res) => {
 
 
 /* Logout Route */
-server.use('/logout', (req, res) => {
+server.post('/logout', (req, res) => {
   req.logout();
-  res.redirect('/_healthcheck')
-  // res.status(200).json({ success: true, message: 'logout successful' })
+  // res.redirect('/_healthcheck')
+  res.status(200).json({ success: true, message: 'logout successful' })
 });
 
 

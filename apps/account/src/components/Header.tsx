@@ -36,8 +36,6 @@ export const HeaderElement: React.FC = () => {
 
     }, []);
 
-    console.log(profile)
-
     return (
         <>
             <Link href="/">

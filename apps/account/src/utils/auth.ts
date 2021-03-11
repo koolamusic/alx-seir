@@ -9,10 +9,10 @@
 
 import { IncomingHttpHeaders } from "http";
 import { NextPageContext } from "next";
-import Router from 'next/router'
+import Router from 'next/router';
 import { setCookie, destroyCookie, parseCookies } from 'nookies'
 
-const settings = {
+export const settings = {
     loginRoute: '/login',
     authKey: "__app.sid",
     profileKey: "__app.user"
@@ -23,6 +23,7 @@ export const redirect = (target: string, ctx: NextPageContext) => {
         ctx.res.writeHead(303, { Location: target });
         ctx.res.end();
     } else {
+        // window.location.replace(target) window.location has some bugs
         Router.replace(target);
     }
 }
@@ -33,12 +34,13 @@ export const loginUser = async (target: string, payload: string) => {
     window.location.replace(target);
 };
 
-export const logoutUser = (ctx: NextPageContext, target = settings.loginRoute) => {
+export const logoutUser = (ctx: NextPageContext | null, target = settings.loginRoute) => {
 
     // Sign out user by removing the cookie from the broswer session
     destroyCookie(ctx, settings.authKey);
     destroyCookie(ctx, settings.profileKey);
-    redirect(target, ctx);
+    redirect(target, ctx as NextPageContext);
+
 
 };
 
@@ -62,6 +64,8 @@ export const redirectIfAuthenticated = (ctx: NextPageContext, target = '/') => {
 
 
 export const redirectIfNotAuthenticated = (ctx: NextPageContext, target = settings.loginRoute) => {
+    console.log(isAuthenticated(ctx), "is authenticated")
+
     if (!isAuthenticated(ctx)) {
         redirect(target, ctx);
         return true;
